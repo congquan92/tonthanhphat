@@ -5,7 +5,7 @@ dotenv.config();
 
 const prisma = new PrismaClient();
 async function main() {
-    const email = "admin123.com";
+    const email = "admin123@gmail.com";
     const password = "admin123"; // Default password
 
     const existingAdmin = await prisma.adminUser.findUnique({
