@@ -20,7 +20,8 @@ export const AuthController = {
             if (error.message === "INVALID_CREDENTIALS") {
                 return res.status(401).json({ success: false, message: "Email hoặc mật khẩu không chính xác" });
             }
-            res.status(500).json({ success: false, message: "Lỗi hệ thống" });
+            res.status(500).json({ success: false, message: "Lỗi hệ thống", error: error });
+            console.error(error);
         }
     },
 
