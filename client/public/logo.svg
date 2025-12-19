@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 260">
+  <!-- Nền trong suốt -->
+  <rect width="500" height="260" fill="transparent"/>
+
+  <!-- Mái nhà (hạ xuống cho cân đối) -->
+  <path d="M60 100 L250 40 L440 100" stroke="black" stroke-width="14" fill="none" stroke-linecap="round"/>  
+
+  <!-- Chữ Thành Phát (cân giữa, ngay dưới mái) -->
+  <text x="250" y="170" text-anchor="middle" font-size="65" font-family="Arial, sans-serif" font-weight="bold" fill="black">
+    THÀNH PHÁT
+  </text>
+
+  <!-- Chữ Steel (nhỏ gọn hơn, không quá sát mép) -->
+  <text x="250" y="230" text-anchor="middle" font-size="40" font-style="italic" font-weight="600" font-family="Arial, sans-serif" fill="black">
+    STEEL
+  </text>
+</svg>
