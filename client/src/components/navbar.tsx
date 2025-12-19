@@ -2,9 +2,75 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Menu, X, Phone, Mail } from "lucide-react";
+import { Menu, X, Phone, Mail, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { navLinks, companyInfo, contactInfo } from "./data";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { navLinks, companyInfo, contactInfo, type NavLink } from "./data";
+
+// Desktop Navigation Item Component
+function NavItem({ link }: { link: NavLink }) {
+    if (link.submenu) {
+        return (
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="gap-1">
+                        {link.label}
+                        <ChevronDown className="h-4 w-4" />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-48">
+                    {link.submenu.map((subItem) => (
+                        <DropdownMenuItem key={subItem.href} asChild>
+                            <Link href={subItem.href}>{subItem.label}</Link>
+                        </DropdownMenuItem>
+                    ))}
+                </DropdownMenuContent>
+            </DropdownMenu>
+        );
+    }
+
+    return (
+        <Button variant="ghost" asChild>
+            <Link href={link.href}>{link.label}</Link>
+        </Button>
+    );
+}
+
+// Mobile Navigation Item Component
+function MobileNavItem({ link, onClose }: { link: NavLink; onClose: () => void }) {
+    const [isExpanded, setIsExpanded] = useState(false);
+
+    if (link.submenu) {
+        return (
+            <div>
+                <Button variant="ghost" className="w-full justify-between" onClick={() => setIsExpanded(!isExpanded)}>
+                    {link.label}
+                    <ChevronDown className={`h-4 w-4 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                </Button>
+                <div className={`overflow-hidden transition-all duration-200 ${isExpanded ? "max-h-96" : "max-h-0"}`}>
+                    <div className="pl-4 flex flex-col gap-1">
+                        {link.submenu.map((subItem) => (
+                            <Button key={subItem.href} variant="ghost" className="justify-start text-muted-foreground" asChild>
+                                <Link href={subItem.href} onClick={onClose}>
+                                    {subItem.label}
+                                </Link>
+                            </Button>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <Button variant="ghost" className="justify-start" asChild>
+            <Link href={link.href} onClick={onClose}>
+                {link.label}
+            </Link>
+        </Button>
+    );
+}
 
 export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -32,12 +98,14 @@ export default function Navbar() {
             <nav className="bg-background">
                 <div className="container mx-auto px-4">
                     <div className="flex justify-between items-center h-16 lg:h-20">
-                        {/* Logo */}
-                        <div className="flex items-center gap-6 justify-between">
+                        {/* Logo & Navigation */}
+                        <div className="flex items-center gap-8">
+                            {/* Logo with Avatar */}
                             <Link href="/" className="flex items-center gap-3 group">
-                                <div className="w-10 h-10 lg:w-12 lg:h-12 bg-primary rounded-lg flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow">
-                                    <span className="text-primary-foreground font-bold text-lg lg:text-xl">{companyInfo.shortName}</span>
-                                </div>
+                                <Avatar className="w-10 h-10 lg:w-12 lg:h-12 rounded-lg">
+                                    <AvatarImage src={companyInfo.logo} alt={companyInfo.name} className="object-cover" />
+                                    <AvatarFallback className="bg-primary text-primary-foreground font-bold text-lg rounded-lg">{companyInfo.shortName}</AvatarFallback>
+                                </Avatar>
                                 <div className="hidden sm:block">
                                     <h1 className="text-lg lg:text-xl font-bold text-foreground group-hover:text-primary transition-colors">{companyInfo.name}</h1>
                                     <p className="text-xs text-muted-foreground -mt-0.5">{companyInfo.tagline}</p>
@@ -47,9 +115,7 @@ export default function Navbar() {
                             {/* Desktop Navigation */}
                             <div className="hidden lg:flex items-center gap-1">
                                 {navLinks.map((link) => (
-                                    <Button key={link.href} variant="ghost" asChild>
-                                        <Link href={link.href}>{link.label}</Link>
-                                    </Button>
+                                    <NavItem key={link.href} link={link} />
                                 ))}
                             </div>
                         </div>
@@ -71,14 +137,10 @@ export default function Navbar() {
                     </div>
 
                     {/* Mobile Navigation */}
-                    <div className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${isMenuOpen ? "max-h-96 pb-4" : "max-h-0"}`}>
+                    <div className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${isMenuOpen ? "max-h-[500px] pb-4" : "max-h-0"}`}>
                         <div className="flex flex-col gap-1 pt-2 border-t border-border">
                             {navLinks.map((link) => (
-                                <Button key={link.href} variant="ghost" className="justify-start" asChild>
-                                    <Link href={link.href} onClick={() => setIsMenuOpen(false)}>
-                                        {link.label}
-                                    </Link>
-                                </Button>
+                                <MobileNavItem key={link.href} link={link} onClose={() => setIsMenuOpen(false)} />
                             ))}
                             <Button className="mt-2" asChild>
                                 <a href={contactInfo.phoneLink}>
