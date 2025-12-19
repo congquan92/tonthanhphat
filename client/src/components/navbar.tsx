@@ -6,7 +6,7 @@ import { Menu, X, Phone, Mail, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { navLinks, companyInfo, contactInfo, type NavLink } from "./data";
+import { navLinks, type NavLink } from "./data";
 
 // Desktop Navigation Item Component
 function NavItem({ link }: { link: NavLink }) {

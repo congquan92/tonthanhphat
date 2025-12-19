@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 
 import authRoutes from "./routes/auth.routes.js";
+import contactInfRoutes from "./routes/contactInf.route.js";
 
 dotenv.config();
 
@@ -19,5 +20,6 @@ app.use(
 );
 
 app.use("/api/auth", authRoutes);
+app.use("/api/info", contactInfRoutes);
 
 export default app;

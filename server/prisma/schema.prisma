@@ -17,3 +17,25 @@ model AdminUser {
 
   @@map("admin_users")
 }
+
+model ContactInfo {
+  id String @id @default(uuid())
+
+  // Company Info
+  companyName        String?
+  companyShortName   String?
+  companyTagline     String?
+  companySlogan      String?
+  companyDescription String?
+
+  companyEmail String?
+
+  companyPhone Json?
+  addresses    Json?
+  socialLinks  Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("contact_info")
+}
