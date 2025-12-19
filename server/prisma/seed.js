@@ -70,6 +70,154 @@ async function main() {
     } else {
         console.log("Contact info already exists.");
     }
+
+    // Create Categories
+    const existingCategories = await prisma.category.findFirst();
+    if (!existingCategories) {
+        // Tạo category cha: Sản Phẩm
+        const sanPham = await prisma.category.create({
+            data: {
+                name: "Sản Phẩm",
+                slug: "san-pham",
+                description: "Các sản phẩm tôn chất lượng cao",
+                order: 1,
+                isActive: true,
+            },
+        });
+
+        // Tạo category con cho Sản Phẩm
+        await prisma.category.createMany({
+            data: [
+                {
+                    name: "Tôn Kẽm",
+                    slug: "ton-kem",
+                    description: "Tôn kẽm chất lượng cao",
+                    parentId: sanPham.id,
+                    order: 1,
+                    isActive: true,
+                },
+                {
+                    name: "Tôn Màu",
+                    slug: "ton-mau",
+                    description: "Tôn màu đa dạng",
+                    parentId: sanPham.id,
+                    order: 2,
+                    isActive: true,
+                },
+                {
+                    name: "Tôn Sóng Vuông",
+                    slug: "ton-song-vuong",
+                    description: "Tôn sóng vuông chắc chắn",
+                    parentId: sanPham.id,
+                    order: 3,
+                    isActive: true,
+                },
+                {
+                    name: "Tôn 5 Sóng",
+                    slug: "ton-5-song",
+                    description: "Tôn 5 sóng tiêu chuẩn",
+                    parentId: sanPham.id,
+                    order: 4,
+                    isActive: true,
+                },
+                {
+                    name: "Tôn 11 Sóng",
+                    slug: "ton-11-song",
+                    description: "Tôn 11 sóng bền đẹp",
+                    parentId: sanPham.id,
+                    order: 5,
+                    isActive: true,
+                },
+            ],
+        });
+
+        // Tạo category cha: Dịch Vụ
+        const dichVu = await prisma.category.create({
+            data: {
+                name: "Dịch Vụ",
+                slug: "dich-vu",
+                description: "Các dịch vụ hỗ trợ khách hàng",
+                order: 2,
+                isActive: true,
+            },
+        });
+
+        // Tạo category con cho Dịch Vụ
+        await prisma.category.createMany({
+            data: [
+                {
+                    name: "Tư Vấn Miễn Phí",
+                    slug: "tu-van",
+                    description: "Tư vấn miễn phí cho khách hàng",
+                    parentId: dichVu.id,
+                    order: 1,
+                    isActive: true,
+                },
+                {
+                    name: "Báo Giá Nhanh",
+                    slug: "bao-gia",
+                    description: "Báo giá nhanh chóng chính xác",
+                    parentId: dichVu.id,
+                    order: 2,
+                    isActive: true,
+                },
+                {
+                    name: "Vận Chuyển Toàn Quốc",
+                    slug: "van-chuyen",
+                    description: "Vận chuyển toàn quốc",
+                    parentId: dichVu.id,
+                    order: 3,
+                    isActive: true,
+                },
+                {
+                    name: "Bảo Hành Chính Hãng",
+                    slug: "bao-hanh",
+                    description: "Bảo hành chính hãng uy tín",
+                    parentId: dichVu.id,
+                    order: 4,
+                    isActive: true,
+                },
+            ],
+        });
+
+        // Tạo các category không có con
+        await prisma.category.createMany({
+            data: [
+                {
+                    name: "Trang Chủ",
+                    slug: "/",
+                    description: "Trang chủ website",
+                    order: 0,
+                    isActive: true,
+                },
+                {
+                    name: "Giới Thiệu",
+                    slug: "gioi-thieu",
+                    description: "Giới thiệu về công ty",
+                    order: 3,
+                    isActive: true,
+                },
+                {
+                    name: "Bảng Giá",
+                    slug: "bang-gia",
+                    description: "Bảng giá sản phẩm",
+                    order: 4,
+                    isActive: true,
+                },
+                {
+                    name: "Liên Hệ",
+                    slug: "lien-he",
+                    description: "Thông tin liên hệ",
+                    order: 5,
+                    isActive: true,
+                },
+            ],
+        });
+
+        console.log("Categories created successfully.");
+    } else {
+        console.log("Categories already exist.");
+    }
 }
 
 main()

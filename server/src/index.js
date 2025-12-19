@@ -3,10 +3,10 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
+dotenv.config();
 import authRoutes from "./routes/auth.routes.js";
 import contactInfRoutes from "./routes/contactInf.route.js";
-
-dotenv.config();
+import categoryRoutes from "./routes/category.route.js"
 
 const app = express();
 
@@ -21,5 +21,6 @@ app.use(
 
 app.use("/api/auth", authRoutes);
 app.use("/api/info", contactInfRoutes);
+app.use("/api/categories", categoryRoutes);
 
 export default app;
