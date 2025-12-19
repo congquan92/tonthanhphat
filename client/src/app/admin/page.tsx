@@ -1,7 +1,4 @@
-export default function page() {
-    return (
-        <div>
-            <h1>hello admin</h1>
-        </div>
-    );
+import { redirect } from "next/navigation";
+export default function AdminPage() {
+    redirect("/admin/dashboard");
 }

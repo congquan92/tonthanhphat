@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const axiosInstance = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_URL,
-    withCredentials: true, // Gửi cookie cùng với yêu cầu
+    withCredentials: true,
 });
 
 axiosInstance.interceptors.response.use(
@@ -10,16 +10,18 @@ axiosInstance.interceptors.response.use(
     async (error) => {
         const originalRequest = error.config;
 
-        if (error.response?.status === 401 && !originalRequest._retry) {
+        // Chỉ retry khi:
+        // 1. Status là 401
+        // 2. Chưa retry lần nào
+        // 3. KHÔNG PHẢI là request login hoặc refresh
+        const isLoginRequest = originalRequest.url?.includes("/auth/login");
+        const isRefreshRequest = originalRequest.url?.includes("/auth/refresh");
+
+        if (error.response?.status === 401 && !originalRequest._retry && !isLoginRequest && !isRefreshRequest) {
             originalRequest._retry = true;
 
             try {
-                // Chỉ cần gọi API refresh.
-                // Backend sẽ nhận Refresh Cookie hiện tại và trả về Set-Cookie mới.
                 await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`, {}, { withCredentials: true });
-
-                // Sau khi refresh thành công, trình duyệt đã tự cập nhật Cookie mới.
-                // Chỉ cần thực hiện lại request cũ.
                 return axiosInstance(originalRequest);
             } catch (err) {
                 if (typeof window !== "undefined") {
