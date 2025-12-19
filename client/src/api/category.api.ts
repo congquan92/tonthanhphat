@@ -21,6 +21,12 @@ export const CategoryApi = {
         return res.data;
     },
 
+    // Lấy navLinks format sẵn cho navbar
+    getNavLinks: async () => {
+        const res = await axiosInstance.get("/categories/navlinks");
+        return res.data;
+    },
+
     // ==================== ADMIN ====================
     // Lấy tất cả categories cho admin
     getAllCategoriesAdmin: async () => {

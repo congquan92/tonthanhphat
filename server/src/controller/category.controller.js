@@ -227,4 +227,15 @@ export const CategoryController = {
             return res.status(500).json({ success: false, message: "Lỗi hệ thống" });
         }
     },
+
+    // Lấy navLinks format sẵn cho navbar
+    getNavLinks: async (req, res) => {
+        try {
+            const navLinks = await CategoryService.getNavLinks();
+            return res.json({ success: true, data: navLinks });
+        } catch (error) {
+            console.error("Lỗi Controller:", error);
+            return res.status(500).json({ success: false, message: "Lỗi hệ thống" });
+        }
+    },
 };

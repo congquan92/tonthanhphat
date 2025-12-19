@@ -7,6 +7,7 @@ const router = express.Router();
 // ==================== PUBLIC  ====================
 router.get("/", CategoryController.getAllCategories);
 router.get("/root", CategoryController.getRootCategories);
+router.get("/navlinks", CategoryController.getNavLinks);
 router.get("/:parentId/children", CategoryController.getCategoryChildren);
 
 // ==================== ADMIN ====================
