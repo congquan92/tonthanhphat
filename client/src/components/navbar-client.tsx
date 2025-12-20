@@ -19,6 +19,7 @@ interface NavbarClientProps {
     companyShortName: string;
     companyTagline: string;
     phoneLink: string;
+    zaloLink: string;
 }
 
 // Desktop Navigation Item Component
@@ -85,7 +86,7 @@ function MobileNavItem({ link, onClose }: { link: NavLink; onClose: () => void }
     );
 }
 
-export function NavbarClient({ navLinks, companyName, companyShortName, companyTagline, phoneLink }: NavbarClientProps) {
+export function NavbarClient({ navLinks, companyName, companyShortName, companyTagline, phoneLink, zaloLink }: NavbarClientProps) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     return (
@@ -116,10 +117,14 @@ export function NavbarClient({ navLinks, companyName, companyShortName, companyT
 
                     {/* CTA Button */}
                     <div className="hidden lg:flex items-center gap-4">
-                        <Button asChild>
+                        <Button asChild variant="secondary" size="lg" className="rounded-none underline-offset-4 hover:underline cursor-pointer">
+                            <a href={zaloLink} target="_blank" rel="noopener noreferrer">
+                                <Phone className="h-4 w-4" /> Liên Hệ Qua Zalo
+                            </a>
+                        </Button>
+                        <Button asChild variant="secondary" size="lg" className="rounded-none underline-offset-4 hover:underline cursor-pointer">
                             <a href={phoneLink}>
-                                <Phone className="h-4 w-4" />
-                                Báo Giá Ngay
+                                <Phone className="h-4 w-4" /> Báo Giá Ngay
                             </a>
                         </Button>
                     </div>
@@ -131,15 +136,19 @@ export function NavbarClient({ navLinks, companyName, companyShortName, companyT
                 </div>
 
                 {/* Mobile Navigation */}
-                <div className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${isMenuOpen ? "max-h-[500px] pb-4" : "max-h-0"}`}>
+                <div className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${isMenuOpen ? "max-h-[503px] pb-4" : "max-h-0"}`}>
                     <div className="flex flex-col gap-1 pt-2 border-t border-border">
                         {navLinks.map((link) => (
                             <MobileNavItem key={link.href} link={link} onClose={() => setIsMenuOpen(false)} />
                         ))}
-                        <Button className="mt-2" asChild>
+                        <Button variant={"outline"} className="mt-2 rounded-none" asChild>
                             <a href={phoneLink}>
-                                <Phone className="h-4 w-4" />
-                                Báo Giá Ngay
+                                <Phone className="h-4 w-4" /> Báo Giá Ngay
+                            </a>
+                        </Button>
+                        <Button variant={"outline"} className="mt-2 rounded-none" asChild>
+                            <a href={zaloLink} target="_blank" rel="noopener noreferrer">
+                                <Phone className="h-4 w-4" /> Liên Hệ Qua Zalo
                             </a>
                         </Button>
                     </div>
