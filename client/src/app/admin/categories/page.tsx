@@ -152,7 +152,7 @@ export default function CategoriesPage() {
                     <CardTitle className="flex items-center gap-2 text-lg font-semibold text-slate-900 dark:text-white">
                         <FolderOpen className="h-5 w-5 text-blue-500" />
                         Cây danh mục
-                        <span className="ml-auto text-sm font-normal text-slate-400">{categories.length} danh mục gốc</span>
+                        <span className="ml-auto text-sm font-normal text-slate-400">{categories.filter((c) => !c.parentId).length} danh mục gốc</span>
                     </CardTitle>
                 </CardHeader>
                 <CardContent className="p-2">
@@ -172,9 +172,11 @@ export default function CategoriesPage() {
                         </div>
                     ) : (
                         <div className="divide-y divide-slate-100 dark:divide-slate-700/50">
-                            {categories.map((category) => (
-                                <CategoryTreeItem key={category.id} category={category} level={0} expandedIds={expandedIds} onToggleExpand={handleToggleExpand} onEdit={handleEdit} onDelete={setDeleteCategory} onAddChild={handleAddChild} />
-                            ))}
+                            {categories
+                                .filter((cat) => !cat.parentId) // Chỉ hiển thị categories gốc (không có parent)
+                                .map((category) => (
+                                    <CategoryTreeItem key={category.id} category={category} level={0} expandedIds={expandedIds} onToggleExpand={handleToggleExpand} onEdit={handleEdit} onDelete={setDeleteCategory} onAddChild={handleAddChild} />
+                                ))}
                         </div>
                     )}
                 </CardContent>

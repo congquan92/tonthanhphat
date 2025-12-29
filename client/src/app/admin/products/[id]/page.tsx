@@ -164,15 +164,11 @@ export default function EditProductPage() {
         }
     };
 
-    // Flatten categories
-    const flatCategories: { id: string; name: string }[] = [];
-    const flattenCategories = (cats: Category[], level = 0) => {
-        cats.forEach((cat) => {
-            flatCategories.push({ id: cat.id, name: "—".repeat(level) + " " + cat.name });
-            if (cat.children) flattenCategories(cat.children, level + 1);
-        });
-    };
-    flattenCategories(categories);
+    // Get product categories - only categories that have a parentId (are children/product categories)
+    const productCategories = categories
+        .filter((cat) => cat.parentId) // Chỉ lấy categories con (có parentId)
+        .map((cat) => ({ id: cat.id, name: cat.name }))
+        .sort((a, b) => a.name.localeCompare(b.name, "vi"));
 
     if (isLoading) {
         return (
@@ -338,7 +334,7 @@ export default function EditProductPage() {
                                     className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-slate-700 dark:bg-slate-900"
                                 >
                                     <option value="">Chọn danh mục</option>
-                                    {flatCategories.map((cat) => (
+                                    {productCategories.map((cat) => (
                                         <option key={cat.id} value={cat.id}>
                                             {cat.name}
                                         </option>
