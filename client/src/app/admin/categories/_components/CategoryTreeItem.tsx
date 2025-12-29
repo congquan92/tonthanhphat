@@ -1,6 +1,6 @@
 "use client";
 
-import { Plus, Pencil, Trash2, ChevronRight, ChevronDown, FolderOpen, GripVertical, MoreHorizontal } from "lucide-react";
+import { Plus, Pencil, Trash2, ChevronRight, ChevronDown, FolderOpen, GripVertical, MoreHorizontal, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Category } from "@/api/type";
@@ -14,9 +14,10 @@ interface CategoryTreeItemProps {
     onEdit: (category: Category) => void;
     onDelete: (category: Category) => void;
     onAddChild: (parentId: string) => void;
+    onToggleActive: (category: Category) => void;
 }
 
-export function CategoryTreeItem({ category, level, expandedIds, onToggleExpand, onEdit, onDelete, onAddChild }: CategoryTreeItemProps) {
+export function CategoryTreeItem({ category, level, expandedIds, onToggleExpand, onEdit, onDelete, onAddChild, onToggleActive }: CategoryTreeItemProps) {
     const hasChildren = category.children && category.children.length > 0;
     const isExpanded = expandedIds.has(category.id);
 
@@ -64,9 +65,22 @@ export function CategoryTreeItem({ category, level, expandedIds, onToggleExpand,
                                 <Pencil className="mr-2 h-4 w-4" />
                                 Chỉnh sửa
                             </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => onToggleActive(category)}>
+                                {category.isActive ? (
+                                    <>
+                                        <EyeOff className="mr-2 h-4 w-4" />
+                                        Ẩn danh mục
+                                    </>
+                                ) : (
+                                    <>
+                                        <Eye className="mr-2 h-4 w-4" />
+                                        Hiển thị danh mục
+                                    </>
+                                )}
+                            </DropdownMenuItem>
                             <DropdownMenuItem className="text-red-600 focus:text-red-600" onClick={() => onDelete(category)}>
                                 <Trash2 className="mr-2 h-4 w-4" />
-                                Xóa
+                                Xóa vĩnh viễn
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -77,7 +91,7 @@ export function CategoryTreeItem({ category, level, expandedIds, onToggleExpand,
             {hasChildren && isExpanded && (
                 <div className="animate-slide-down">
                     {category.children!.map((child) => (
-                        <CategoryTreeItem key={child.id} category={child} level={level + 1} expandedIds={expandedIds} onToggleExpand={onToggleExpand} onEdit={onEdit} onDelete={onDelete} onAddChild={onAddChild} />
+                        <CategoryTreeItem key={child.id} category={child} level={level + 1} expandedIds={expandedIds} onToggleExpand={onToggleExpand} onEdit={onEdit} onDelete={onDelete} onAddChild={onAddChild} onToggleActive={onToggleActive} />
                     ))}
                 </div>
             )}

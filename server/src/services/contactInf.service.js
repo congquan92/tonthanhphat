@@ -5,10 +5,22 @@ export const ContactInfService = {
         return contactInfo;
     },
     updateContactInfo: async (contactInfoData) => {
-        const updatedContactInfo = await prisma.contactInfo.update({
-            where: { id: contactInfoData.id },
-            data: contactInfoData,
-        });
-        return updatedContactInfo;
+        // Tìm record hiện có
+        const existingRecord = await prisma.contactInfo.findFirst();
+        
+        if (existingRecord) {
+            // Nếu đã có record, update nó
+            const updatedContactInfo = await prisma.contactInfo.update({
+                where: { id: existingRecord.id },
+                data: contactInfoData,
+            });
+            return updatedContactInfo;
+        } else {
+            // Nếu chưa có, tạo mới
+            const newContactInfo = await prisma.contactInfo.create({
+                data: contactInfoData,
+            });
+            return newContactInfo;
+        }
     },
 };

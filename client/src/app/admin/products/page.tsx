@@ -62,9 +62,9 @@ export default function ProductsPage() {
     const handleDelete = async () => {
         if (!deleteProduct) return;
         try {
-            await ProductApi.deleteProduct(deleteProduct.id);
+            await ProductApi.hardDeleteProduct(deleteProduct.id);
             setProducts((prev) => prev.filter((p) => p.id !== deleteProduct.id));
-            toast.success("Đã xóa sản phẩm");
+            toast.success("Đã xóa vĩnh viễn sản phẩm");
             setDeleteProduct(null);
         } catch (error) {
             toast.error("Không thể xóa sản phẩm");
@@ -225,15 +225,17 @@ export default function ProductsPage() {
             <AlertDialog open={!!deleteProduct} onOpenChange={() => setDeleteProduct(null)}>
                 <AlertDialogContent className="rounded-2xl">
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Xác nhận xóa sản phẩm</AlertDialogTitle>
+                        <AlertDialogTitle>Xóa vĩnh viễn sản phẩm</AlertDialogTitle>
                         <AlertDialogDescription>
-                            Bạn có chắc chắn muốn xóa sản phẩm <strong>"{deleteProduct?.name}"</strong>?
+                            Bạn có chắc chắn muốn <strong className="text-red-600">xóa vĩnh viễn</strong> sản phẩm <strong>"{deleteProduct?.name}"</strong>?
+                            <br />
+                            <span className="text-red-500">Hành động này không thể hoàn tác!</span>
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                         <AlertDialogCancel className="rounded-xl">Hủy</AlertDialogCancel>
                         <AlertDialogAction onClick={handleDelete} className="rounded-xl bg-red-500 text-white hover:bg-red-600">
-                            Xóa sản phẩm
+                            Xóa vĩnh viễn
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>

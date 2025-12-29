@@ -110,17 +110,29 @@ export default function CategoriesPage() {
         }
     };
 
-    // Delete category
+    // Delete category (hard delete)
     const handleDelete = async () => {
         if (!deleteCategory) return;
         try {
-            await CategoryApi.softDeleteCategory(deleteCategory.id);
-            toast.success("Đã xóa danh mục");
+            await CategoryApi.hardDeleteCategory(deleteCategory.id);
+            toast.success("Đã xóa vĩnh viễn danh mục");
             setDeleteCategory(null);
             fetchCategories();
         } catch (error) {
             console.error("Failed to delete category:", error);
             toast.error("Không thể xóa danh mục");
+        }
+    };
+
+    // Toggle active status (hide/show)
+    const handleToggleActive = async (category: Category) => {
+        try {
+            await CategoryApi.updateCategory(category.id, { isActive: !category.isActive });
+            toast.success(category.isActive ? "Đã ẩn danh mục" : "Đã hiển thị danh mục");
+            fetchCategories();
+        } catch (error) {
+            console.error("Failed to toggle category:", error);
+            toast.error("Không thể cập nhật trạng thái");
         }
     };
 
@@ -175,7 +187,7 @@ export default function CategoriesPage() {
                             {categories
                                 .filter((cat) => !cat.parentId) // Chỉ hiển thị categories gốc (không có parent)
                                 .map((category) => (
-                                    <CategoryTreeItem key={category.id} category={category} level={0} expandedIds={expandedIds} onToggleExpand={handleToggleExpand} onEdit={handleEdit} onDelete={setDeleteCategory} onAddChild={handleAddChild} />
+                                    <CategoryTreeItem key={category.id} category={category} level={0} expandedIds={expandedIds} onToggleExpand={handleToggleExpand} onEdit={handleEdit} onDelete={setDeleteCategory} onAddChild={handleAddChild} onToggleActive={handleToggleActive} />
                                 ))}
                         </div>
                     )}
@@ -189,15 +201,17 @@ export default function CategoriesPage() {
             <AlertDialog open={!!deleteCategory} onOpenChange={() => setDeleteCategory(null)}>
                 <AlertDialogContent className="rounded-2xl">
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Xác nhận xóa danh mục</AlertDialogTitle>
+                        <AlertDialogTitle>Xóa vĩnh viễn danh mục</AlertDialogTitle>
                         <AlertDialogDescription>
-                            Bạn có chắc chắn muốn xóa danh mục <strong>{deleteCategory?.name}</strong>? Tất cả danh mục con cũng sẽ bị xóa.
+                            Bạn có chắc chắn muốn <strong className="text-red-600">xóa vĩnh viễn</strong> danh mục <strong>{deleteCategory?.name}</strong>?
+                            <br />
+                            <span className="text-red-500">Hành động này không thể hoàn tác! Tất cả danh mục con cũng sẽ bị xóa.</span>
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                         <AlertDialogCancel className="rounded-xl">Hủy</AlertDialogCancel>
                         <AlertDialogAction onClick={handleDelete} className="rounded-xl bg-red-500 text-white hover:bg-red-600">
-                            Xóa danh mục
+                            Xóa vĩnh viễn
                         </AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
