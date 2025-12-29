@@ -30,24 +30,9 @@ const menuItems = [
         icon: FolderOpen,
     },
     {
-        title: "Đơn hàng",
-        href: "/admin/orders",
-        icon: ShoppingCart,
-    },
-    {
-        title: "Khách hàng",
-        href: "/admin/customers",
-        icon: Users,
-    },
-    {
         title: "Bài viết",
         href: "/admin/posts",
         icon: FileText,
-    },
-    {
-        title: "Thống kê",
-        href: "/admin/analytics",
-        icon: BarChart3,
     },
     {
         title: "Cài đặt",
@@ -55,6 +40,7 @@ const menuItems = [
         icon: Settings,
     },
 ];
+
 
 export function AdminSidebar({ isCollapsed, onToggle }: AdminSidebarProps) {
     const router = useRouter();
