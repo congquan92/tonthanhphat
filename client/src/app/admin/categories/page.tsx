@@ -189,7 +189,7 @@ export default function CategoriesPage() {
                     <AlertDialogHeader>
                         <AlertDialogTitle>Xác nhận xóa danh mục</AlertDialogTitle>
                         <AlertDialogDescription>
-                            Bạn có chắc chắn muốn xóa danh mục <strong>"{deleteCategory?.name}"</strong>? Tất cả danh mục con cũng sẽ bị xóa.
+                            Bạn có chắc chắn muốn xóa danh mục <strong>{deleteCategory?.name}</strong>? Tất cả danh mục con cũng sẽ bị xóa.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>

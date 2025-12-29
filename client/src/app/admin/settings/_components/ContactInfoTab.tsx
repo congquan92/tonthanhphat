@@ -17,10 +17,18 @@ interface ContactInfo {
     companySlogan?: string;
     companyDescription?: string;
     companyEmail?: string;
-    companyPhone?: { label: string; number: string }[];
-    addresses?: { label: string; address: string }[];
-    socialLinks?: { platform: string; url: string }[];
+    companyPhone?: string[];
+    addresses?: { type: string; address: string }[];
+    socialLinks?: { platform: string; url: string; icon: string }[];
 }
+
+const PLATFORMS = [
+    { value: "Facebook", icon: "facebook" },
+    { value: "Zalo", icon: "zalo" },
+    { value: "Youtube", icon: "youtube" },
+    { value: "Tiktok", icon: "tiktok" },
+    { value: "Instagram", icon: "instagram" },
+];
 
 export function ContactInfoTab() {
     const [contactInfo, setContactInfo] = useState<ContactInfo>({
@@ -30,9 +38,9 @@ export function ContactInfoTab() {
         companySlogan: "",
         companyDescription: "",
         companyEmail: "",
-        companyPhone: [{ label: "Hotline", number: "" }],
-        addresses: [{ label: "Trụ sở chính", address: "" }],
-        socialLinks: [{ platform: "facebook", url: "" }],
+        companyPhone: [""],
+        addresses: [{ type: "Trụ sở chính", address: "" }],
+        socialLinks: [{ platform: "Facebook", url: "", icon: "facebook" }],
     });
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
@@ -48,9 +56,9 @@ export function ContactInfoTab() {
             if (res.data) {
                 setContactInfo({
                     ...res.data,
-                    companyPhone: res.data.companyPhone?.length ? res.data.companyPhone : [{ label: "Hotline", number: "" }],
-                    addresses: res.data.addresses?.length ? res.data.addresses : [{ label: "Trụ sở chính", address: "" }],
-                    socialLinks: res.data.socialLinks?.length ? res.data.socialLinks : [{ platform: "facebook", url: "" }],
+                    companyPhone: res.data.companyPhone?.length ? res.data.companyPhone : [""],
+                    addresses: res.data.addresses?.length ? res.data.addresses : [{ type: "Trụ sở chính", address: "" }],
+                    socialLinks: res.data.socialLinks?.length ? res.data.socialLinks : [{ platform: "Facebook", url: "", icon: "facebook" }],
                 });
             }
         } catch (error) {
@@ -73,10 +81,11 @@ export function ContactInfoTab() {
         }
     };
 
+    // Phone functions
     const addPhone = () => {
         setContactInfo((prev) => ({
             ...prev,
-            companyPhone: [...(prev.companyPhone || []), { label: "", number: "" }],
+            companyPhone: [...(prev.companyPhone || []), ""],
         }));
     };
 
@@ -87,17 +96,18 @@ export function ContactInfoTab() {
         }));
     };
 
-    const updatePhone = (index: number, field: "label" | "number", value: string) => {
+    const updatePhone = (index: number, value: string) => {
         setContactInfo((prev) => ({
             ...prev,
-            companyPhone: prev.companyPhone?.map((p, i) => (i === index ? { ...p, [field]: value } : p)),
+            companyPhone: prev.companyPhone?.map((p, i) => (i === index ? value : p)),
         }));
     };
 
+    // Address functions
     const addAddress = () => {
         setContactInfo((prev) => ({
             ...prev,
-            addresses: [...(prev.addresses || []), { label: "", address: "" }],
+            addresses: [...(prev.addresses || []), { type: "", address: "" }],
         }));
     };
 
@@ -108,17 +118,18 @@ export function ContactInfoTab() {
         }));
     };
 
-    const updateAddress = (index: number, field: "label" | "address", value: string) => {
+    const updateAddress = (index: number, field: "type" | "address", value: string) => {
         setContactInfo((prev) => ({
             ...prev,
             addresses: prev.addresses?.map((a, i) => (i === index ? { ...a, [field]: value } : a)),
         }));
     };
 
+    // Social link functions
     const addSocialLink = () => {
         setContactInfo((prev) => ({
             ...prev,
-            socialLinks: [...(prev.socialLinks || []), { platform: "facebook", url: "" }],
+            socialLinks: [...(prev.socialLinks || []), { platform: "Facebook", url: "", icon: "facebook" }],
         }));
     };
 
@@ -132,7 +143,14 @@ export function ContactInfoTab() {
     const updateSocialLink = (index: number, field: "platform" | "url", value: string) => {
         setContactInfo((prev) => ({
             ...prev,
-            socialLinks: prev.socialLinks?.map((s, i) => (i === index ? { ...s, [field]: value } : s)),
+            socialLinks: prev.socialLinks?.map((s, i) => {
+                if (i !== index) return s;
+                if (field === "platform") {
+                    const platform = PLATFORMS.find((p) => p.value === value);
+                    return { ...s, platform: value, icon: platform?.icon || value.toLowerCase() };
+                }
+                return { ...s, [field]: value };
+            }),
         }));
     };
 
@@ -205,8 +223,7 @@ export function ContactInfoTab() {
                 <CardContent className="space-y-3 p-6">
                     {contactInfo.companyPhone?.map((phone, index) => (
                         <div key={index} className="flex gap-3">
-                            <Input placeholder="Nhãn (VD: Hotline)" value={phone.label} onChange={(e) => updatePhone(index, "label", e.target.value)} className="w-1/3" />
-                            <Input placeholder="Số điện thoại" value={phone.number} onChange={(e) => updatePhone(index, "number", e.target.value)} className="flex-1" />
+                            <Input placeholder="Số điện thoại (VD: 0901 234 567)" value={phone} onChange={(e) => updatePhone(index, e.target.value)} className="flex-1" />
                             {(contactInfo.companyPhone?.length || 0) > 1 && (
                                 <Button variant="ghost" size="icon" onClick={() => removePhone(index)} className="shrink-0 text-red-500 hover:text-red-600">
                                     <Trash2 className="h-4 w-4" />
@@ -237,7 +254,7 @@ export function ContactInfoTab() {
                 <CardContent className="space-y-3 p-6">
                     {contactInfo.addresses?.map((addr, index) => (
                         <div key={index} className="flex gap-3">
-                            <Input placeholder="Nhãn (VD: Trụ sở chính)" value={addr.label} onChange={(e) => updateAddress(index, "label", e.target.value)} className="w-1/3" />
+                            <Input placeholder="Loại (VD: Nhà máy, Văn phòng)" value={addr.type} onChange={(e) => updateAddress(index, "type", e.target.value)} className="w-1/3" />
                             <Input placeholder="Địa chỉ đầy đủ" value={addr.address} onChange={(e) => updateAddress(index, "address", e.target.value)} className="flex-1" />
                             {(contactInfo.addresses?.length || 0) > 1 && (
                                 <Button variant="ghost" size="icon" onClick={() => removeAddress(index)} className="shrink-0 text-red-500 hover:text-red-600">
@@ -269,12 +286,16 @@ export function ContactInfoTab() {
                 <CardContent className="space-y-3 p-6">
                     {contactInfo.socialLinks?.map((link, index) => (
                         <div key={index} className="flex gap-3">
-                            <select value={link.platform} onChange={(e) => updateSocialLink(index, "platform", e.target.value)} className="w-1/3 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none dark:border-slate-700 dark:bg-slate-900">
-                                <option value="facebook">Facebook</option>
-                                <option value="zalo">Zalo</option>
-                                <option value="youtube">YouTube</option>
-                                <option value="tiktok">TikTok</option>
-                                <option value="instagram">Instagram</option>
+                            <select
+                                value={link.platform}
+                                onChange={(e) => updateSocialLink(index, "platform", e.target.value)}
+                                className="w-1/3 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none dark:border-slate-700 dark:bg-slate-900"
+                            >
+                                {PLATFORMS.map((platform) => (
+                                    <option key={platform.value} value={platform.value}>
+                                        {platform.value}
+                                    </option>
+                                ))}
                             </select>
                             <Input placeholder="URL" value={link.url} onChange={(e) => updateSocialLink(index, "url", e.target.value)} className="flex-1" />
                             {(contactInfo.socialLinks?.length || 0) > 1 && (

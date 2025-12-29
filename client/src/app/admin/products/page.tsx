@@ -7,15 +7,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { ProductApi, Product } from "@/api/product.api";
-import { CategoryApi } from "@/api/category.api";
-import { Category } from "@/api/type";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
 export default function ProductsPage() {
     const [products, setProducts] = useState<Product[]>([]);
-    const [categories, setCategories] = useState<Category[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
     const [filterCategory, setFilterCategory] = useState("");
@@ -25,9 +22,8 @@ export default function ProductsPage() {
     const fetchProducts = async () => {
         try {
             setIsLoading(true);
-            const [productsRes, categoriesRes] = await Promise.all([ProductApi.getAllProductsAdmin(), CategoryApi.getAllCategoriesAdmin()]);
+            const productsRes = await ProductApi.getAllProductsAdmin();
             setProducts(productsRes.data || []);
-            setCategories(categoriesRes.data || []);
         } catch (error) {
             console.error("Failed to fetch products:", error);
             toast.error("Không thể tải dữ liệu");
@@ -75,22 +71,17 @@ export default function ProductsPage() {
         }
     };
 
+    // Get unique category names from products
+    const uniqueCategoryNames = Array.from(
+        new Set(products.filter((p) => p.category?.name).map((p) => p.category!.name))
+    ).sort();
+
     // Filter products
     const filteredProducts = products.filter((product) => {
         const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) || product.slug.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesCategory = !filterCategory || product.categoryId === filterCategory;
+        const matchesCategory = !filterCategory || product.category?.name === filterCategory;
         return matchesSearch && matchesCategory;
     });
-
-    // Get flat categories for dropdown
-    const flatCategories: Category[] = [];
-    const flattenCategories = (cats: Category[], level = 0) => {
-        cats.forEach((cat) => {
-            flatCategories.push({ ...cat, name: "—".repeat(level) + " " + cat.name });
-            if (cat.children) flattenCategories(cat.children, level + 1);
-        });
-    };
-    flattenCategories(categories);
 
     return (
         <div className="space-y-6">
@@ -115,11 +106,15 @@ export default function ProductsPage() {
                         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                         <Input placeholder="Tìm kiếm sản phẩm..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="pl-10" />
                     </div>
-                    <select value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)} className="h-10 rounded-xl border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none dark:border-slate-700 dark:bg-slate-900">
+                    <select
+                        value={filterCategory}
+                        onChange={(e) => setFilterCategory(e.target.value)}
+                        className="h-10 rounded-xl border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none dark:border-slate-700 dark:bg-slate-900"
+                    >
                         <option value="">Tất cả danh mục</option>
-                        {flatCategories.map((cat) => (
-                            <option key={cat.id} value={cat.id}>
-                                {cat.name}
+                        {uniqueCategoryNames.map((name) => (
+                            <option key={name} value={name}>
+                                {name}
                             </option>
                         ))}
                     </select>
@@ -167,6 +162,7 @@ export default function ProductsPage() {
                                 <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
                                     {filteredProducts.map((product) => (
                                         <tr key={product.id} className={cn("transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50", !product.isActive && "opacity-50")}>
+                                            {/* San pham */}
                                             <td className="px-4 py-3">
                                                 <div className="flex items-center gap-3">
                                                     <div className="h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-slate-100">
@@ -184,19 +180,26 @@ export default function ProductsPage() {
                                                     </div>
                                                 </div>
                                             </td>
+                                            {/* Category */}
                                             <td className="px-4 py-3">
                                                 {product.category ? <span className="rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-700">{product.category.name}</span> : <span className="text-slate-400">—</span>}
                                             </td>
+                                            {/* Featured */}
                                             <td className="px-4 py-3 text-center">
-                                                <button onClick={() => toggleFeatured(product)} className={cn("rounded-full p-1.5 transition-colors", product.isFeatured ? "bg-amber-100 text-amber-500" : "bg-slate-100 text-slate-400 hover:text-amber-500")}>
+                                                <button
+                                                    onClick={() => toggleFeatured(product)}
+                                                    className={cn("rounded-full p-1.5 transition-colors", product.isFeatured ? "bg-amber-100 text-amber-500" : "bg-slate-100 text-slate-400 hover:text-amber-500")}
+                                                >
                                                     <Star className={cn("h-4 w-4", product.isFeatured && "fill-current")} />
                                                 </button>
                                             </td>
+                                            {/* Active */}
                                             <td className="px-4 py-3 text-center">
                                                 <button onClick={() => toggleActive(product)} className={cn("rounded-full p-1.5 transition-colors", product.isActive ? "bg-emerald-100 text-emerald-500" : "bg-slate-100 text-slate-400")}>
                                                     {product.isActive ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
                                                 </button>
                                             </td>
+                                            {/* Actions */}
                                             <td className="px-4 py-3">
                                                 <div className="flex items-center justify-end gap-1">
                                                     <Link href={`/admin/products/${product.id}`}>

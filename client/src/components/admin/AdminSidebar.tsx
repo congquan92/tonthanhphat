@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, Package, Users, FileText, Settings, BarChart3, ShoppingCart, FolderOpen, LogOut, ChevronLeft, Menu } from "lucide-react";
+import { Package, FileText, Settings, FolderOpen, LogOut, ChevronLeft, Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -14,11 +14,6 @@ interface AdminSidebarProps {
 }
 
 const menuItems = [
-    {
-        title: "Dashboard",
-        href: "/admin/dashboard",
-        icon: LayoutDashboard,
-    },
     {
         title: "Sản phẩm",
         href: "/admin/products",
