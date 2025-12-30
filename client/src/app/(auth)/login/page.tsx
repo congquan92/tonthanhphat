@@ -21,7 +21,7 @@ export default function LoginPage() {
         try {
             const res = await AuthApi.login(formData.email, formData.password);
             toast.success(`${res.message}`);
-            router.push("/admin/dashboard");
+            router.push("/admin/");
         } catch (error) {
             const axiosError = error as AxiosError<{ message?: string }>;
             const err = axiosError.response?.data?.message || "Đăng nhập thất bại";
