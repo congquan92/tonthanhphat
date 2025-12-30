@@ -34,8 +34,12 @@ const menuItems = [
         href: "/admin/settings",
         icon: Settings,
     },
+    {
+        title: "Banner",
+        href: "/admin/banners",
+        icon: FileText,
+    },
 ];
-
 
 export function AdminSidebar({ isCollapsed, onToggle }: AdminSidebarProps) {
     const router = useRouter();

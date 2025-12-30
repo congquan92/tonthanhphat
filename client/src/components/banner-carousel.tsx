@@ -7,49 +7,15 @@ import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/com
 import { cn } from "@/lib/utils";
 import Autoplay from "embla-carousel-autoplay";
 import { Button } from "@/components/ui/button";
-
-//  fake img
-const sampleImages = [
-    {
-        id: "1",
-        src: "/anime.jpg",
-        alt: "Nhà máy tôn Thành Phát",
-    },
-    {
-        id: "2",
-        src: "/testbg1.png",
-        alt: "Kho tôn Thành Phát",
-    },
-    {
-        id: "3",
-        src: "/anime.jpg",
-        alt: "Sản phẩm tôn",
-    },
-    {
-        id: "4",
-        src: "/anime.jpg",
-        alt: "Xe vận chuyển",
-    },
-    {
-        id: "5",
-        src: "/anime.jpg",
-        alt: "Đội ngũ nhân viên",
-    },
-];
-
-interface CarouselImage {
-    id: string;
-    src: string;
-    alt: string;
-}
+import type { Banner } from "@/api/banner.api";
 
 interface BannerCarouselProps {
-    images?: CarouselImage[];
+    banners?: Banner[];
     autoplay?: boolean;
     className?: string;
 }
 
-export default function BannerCarousel({ images = sampleImages, autoplay = true, className }: BannerCarouselProps) {
+export default function BannerCarousel({ banners = [], autoplay = true, className }: BannerCarouselProps) {
     const [api, setApi] = React.useState<CarouselApi>();
     const [current, setCurrent] = React.useState(0);
     const [count, setCount] = React.useState(0);
@@ -87,10 +53,18 @@ export default function BannerCarousel({ images = sampleImages, autoplay = true,
                 className="w-full"
             >
                 <CarouselContent>
-                    {images.map((image) => (
-                        <CarouselItem key={image.id} className="basis-full">
+                    {banners.map((banner) => (
+                        <CarouselItem key={banner.id} className="basis-full">
                             <div className="relative aspect-video md:aspect-21/9 w-full overflow-hidden bg-gray-200">
-                                <Image src={image.src} alt={image.alt} fill className="object-cover" sizes="100vw" priority />
+                                <Image 
+                                    src={banner.imageUrl} 
+                                    alt={banner.alt} 
+                                    fill 
+                                    className="object-cover" 
+                                    sizes="100vw" 
+                                    quality={95}
+                                    priority 
+                                />
                             </div>
                         </CarouselItem>
                     ))}

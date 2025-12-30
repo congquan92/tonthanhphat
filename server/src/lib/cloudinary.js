@@ -2,7 +2,6 @@ import { v2 as cloudinary } from "cloudinary";
 import dotenv from "dotenv";
 dotenv.config();
 
-// Configure Cloudinary
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
@@ -10,22 +9,29 @@ cloudinary.config({
 });
 
 export const CloudinaryHelper = {
-    /**
-     * Upload ảnh lên Cloudinary từ base64 hoặc URL
-     * @param {string} file - Base64 string hoặc URL
-     * @param {string} folder - Thư mục lưu trữ (vd: "products", "categories")
-     * @returns {Promise<{url: string, publicId: string}>}
-     */
     uploadImage: async (file, folder = "products") => {
         try {
+            // Determine transformation based on folder
+            const isBanner = folder === "banners";
+
+            const transformation = isBanner
+                ? [
+                      // Banners need high resolution for desktop displays
+                      { width: 2560, height: 1440, crop: "limit" }, // Support up to 2K displays
+                      { quality: "auto:best" }, // Best quality for banners
+                      { format: "webp" }, // Still use WebP for optimization
+                  ]
+                : [
+                      // Products can use smaller size
+                      { width: 1200, height: 1200, crop: "limit" },
+                      { quality: "auto:good" },
+                      { format: "webp" },
+                  ];
+
             const result = await cloudinary.uploader.upload(file, {
                 folder: `tonthanhphat/${folder}`,
                 resource_type: "image",
-                transformation: [
-                    { width: 1200, height: 1200, crop: "limit" }, // Giới hạn kích thước max
-                    { quality: "auto:good" }, // Tự động optimize
-                    { format: "webp" }, // Convert sang WebP
-                ],
+                transformation,
             });
             return {
                 url: result.secure_url,
@@ -37,21 +43,11 @@ export const CloudinaryHelper = {
         }
     },
 
-    /**
-     * Upload nhiều ảnh
-     * @param {string[]} files - Array base64 strings hoặc URLs
-     * @param {string} folder
-     * @returns {Promise<Array<{url: string, publicId: string}>>}
-     */
     uploadMultipleImages: async (files, folder = "products") => {
         const uploadPromises = files.map((file) => CloudinaryHelper.uploadImage(file, folder));
         return Promise.all(uploadPromises);
     },
 
-    /**
-     * Xóa ảnh khỏi Cloudinary
-     * @param {string} publicId
-     */
     deleteImage: async (publicId) => {
         try {
             await cloudinary.uploader.destroy(publicId);
@@ -60,10 +56,6 @@ export const CloudinaryHelper = {
         }
     },
 
-    /**
-     * Xóa nhiều ảnh
-     * @param {string[]} publicIds
-     */
     deleteMultipleImages: async (publicIds) => {
         try {
             await cloudinary.api.delete_resources(publicIds);
