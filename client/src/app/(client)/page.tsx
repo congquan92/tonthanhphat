@@ -1,18 +1,20 @@
-import { CategoryApi } from "@/api/category.api";
 import { ContactInfoApi } from "@/api/contacinfo.api";
 import Introduce from "@/components/introduce";
-import ProductCarousel from "@/components/product-carousel";
 import { ContactInfo } from "@/components/type";
+import BannerCarousel from "@/components/banner-carousel";
+import ProductCarousel from "@/components/product-carousel";
+import { ProductApi } from "@/api/product.api";
 
 export default async function Home() {
-    const [contactRes, navLinksRes] = await Promise.all([ContactInfoApi.getContactInfo(), CategoryApi.getNavLinks()]);
+    const [contactRes, productRes] = await Promise.all([ContactInfoApi.getContactInfo(), ProductApi.getFeaturedProducts(10)]);
     const contactInfo: ContactInfo = contactRes.data;
-    const navLinks = navLinksRes.data;
-    console.log("Nav Links:", navLinksRes);
+    const products = productRes.data || [];
+
     return (
         <div>
-            <ProductCarousel />
+            <BannerCarousel />
             <Introduce data={contactInfo} />
+            <ProductCarousel slogan={contactInfo.companySlogan} products={products} />
         </div>
     );
 }

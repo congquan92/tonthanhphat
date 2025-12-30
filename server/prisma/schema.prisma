@@ -75,3 +75,11 @@ model Product {
 
   @@map("products")
 }
+
+model Banner {
+  id       String  @id @default(uuid())
+  imageUrl String
+  nameUrl  String?
+
+  @@map("banners")
+}
