@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { AuthApi } from "@/api/auth.api";
+import { AxiosError } from "axios";
 
 export default function LoginPage() {
     const [formData, setFormData] = useState({ email: "", password: "" });
@@ -22,7 +23,8 @@ export default function LoginPage() {
             toast.success(`${res.message}`);
             router.push("/admin/dashboard");
         } catch (error) {
-            const err = error?.response?.data?.message || "Đăng nhập thất bại";
+            const axiosError = error as AxiosError<{ message?: string }>;
+            const err = axiosError.response?.data?.message || "Đăng nhập thất bại";
             toast.error(err);
             console.log("Login failed");
         } finally {

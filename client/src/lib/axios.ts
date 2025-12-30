@@ -5,6 +5,9 @@ export const axiosInstance = axios.create({
     withCredentials: true,
 });
 
+// Helper để đợi cookies được set
+const waitForCookies = () => new Promise((resolve) => setTimeout(resolve, 100));
+
 axiosInstance.interceptors.response.use(
     (response) => response,
     async (error) => {
@@ -22,6 +25,8 @@ axiosInstance.interceptors.response.use(
 
             try {
                 await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`, {}, { withCredentials: true });
+                // Đợi browser xử lý Set-Cookie trước khi retry
+                await waitForCookies();
                 return axiosInstance(originalRequest);
             } catch (err) {
                 if (typeof window !== "undefined") {

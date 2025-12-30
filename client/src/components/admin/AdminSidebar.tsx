@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, Package, Users, FileText, Settings, BarChart3, ShoppingCart, FolderOpen, LogOut, ChevronLeft, Menu } from "lucide-react";
+import { Package, FileText, Settings, FolderOpen, LogOut, ChevronLeft, Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -15,11 +15,6 @@ interface AdminSidebarProps {
 
 const menuItems = [
     {
-        title: "Dashboard",
-        href: "/admin/dashboard",
-        icon: LayoutDashboard,
-    },
-    {
         title: "Sản phẩm",
         href: "/admin/products",
         icon: Package,
@@ -30,24 +25,9 @@ const menuItems = [
         icon: FolderOpen,
     },
     {
-        title: "Đơn hàng",
-        href: "/admin/orders",
-        icon: ShoppingCart,
-    },
-    {
-        title: "Khách hàng",
-        href: "/admin/customers",
-        icon: Users,
-    },
-    {
         title: "Bài viết",
         href: "/admin/posts",
         icon: FileText,
-    },
-    {
-        title: "Thống kê",
-        href: "/admin/analytics",
-        icon: BarChart3,
     },
     {
         title: "Cài đặt",
@@ -55,6 +35,7 @@ const menuItems = [
         icon: Settings,
     },
 ];
+
 
 export function AdminSidebar({ isCollapsed, onToggle }: AdminSidebarProps) {
     const router = useRouter();
