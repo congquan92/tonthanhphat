@@ -36,7 +36,7 @@ export function ContactInfoTab() {
         companyShortName: "",
         companyTagline: "",
         companySlogan: "",
-        companyDescription: "",
+        companyDescription: "".trim(),
         companyEmail: "",
         companyPhone: [""],
         addresses: [{ type: "Trụ sở chính", address: "" }],
@@ -71,7 +71,29 @@ export function ContactInfoTab() {
     const handleSave = async () => {
         try {
             setIsSaving(true);
-            await ContactInfoApi.updateContactInfo(contactInfo as any);
+            
+            // Trim all string fields before sending to server
+            const trimmedData = {
+                ...contactInfo,
+                companyName: contactInfo.companyName?.trim(),
+                companyShortName: contactInfo.companyShortName?.trim(),
+                companyTagline: contactInfo.companyTagline?.trim(),
+                companySlogan: contactInfo.companySlogan?.trim(),
+                companyDescription: contactInfo.companyDescription?.trim(),
+                companyEmail: contactInfo.companyEmail?.trim(),
+                companyPhone: contactInfo.companyPhone?.map(phone => phone.trim()).filter(phone => phone !== ""),
+                addresses: contactInfo.addresses?.map(addr => ({
+                    type: addr.type.trim(),
+                    address: addr.address.trim()
+                })).filter(addr => addr.type !== "" && addr.address !== ""),
+                socialLinks: contactInfo.socialLinks?.map(link => ({
+                    platform: link.platform.trim(),
+                    url: link.url.trim(),
+                    icon: link.icon.trim()
+                })).filter(link => link.url !== ""),
+            };
+            
+            await ContactInfoApi.updateContactInfo(trimmedData as any);
             toast.success("Đã lưu thông tin thành công");
         } catch (error) {
             console.error("Failed to save contact info:", error);
@@ -194,7 +216,7 @@ export function ContactInfoTab() {
                         <Label htmlFor="companyDescription">Mô tả công ty</Label>
                         <textarea
                             id="companyDescription"
-                            value={contactInfo.companyDescription || ""}
+                            value={contactInfo.companyDescription?.trim() || ""}
                             onChange={(e) => setContactInfo((prev) => ({ ...prev, companyDescription: e.target.value }))}
                             placeholder="Giới thiệu ngắn về công ty..."
                             className="mt-1.5 min-h-[100px] w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-slate-700 dark:bg-slate-900"

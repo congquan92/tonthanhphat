@@ -34,7 +34,15 @@ async function main() {
                 companyShortName: "TTP",
                 companyTagline: "Chuyên Sản Xuất & Phân Phối Tôn Thép",
                 companySlogan: "Chất lượng hàng đầu - Giá cả cạnh tranh",
-                companyDescription: "Nhà máy Tôn Thành Phát chuyên sản xuất và phân phối các loại tôn lợp, tôn xốp, tôn mạ kẽm, tôn màu chất lượng cao. Với hơn 10 năm kinh nghiệm, chúng tôi cam kết mang đến sản phẩm tốt nhất cho mọi công trình.",
+                companyDescription: ` CÔNG TY TNHH SẢN XUẤT THƯƠNG MẠI DỊCH VỤ TÔN THÉP THÀNH PHÁT
+                Công Ty Tôn Thép Thành Phát xin trân trọng giới thiệu đến Quý khách hàng:
+                Công ty được thành lập ngày 28/02/2020, hoạt động trong lĩnh vực sản xuất – thương mại – phân phối tôn thép. Trải qua quá trình hình thành và phát triển, Tôn Thép Thành Phát từng bước khẳng định vị thế là đơn vị cung cấp tôn thép uy tín, đáp ứng đa dạng nhu cầu của thị trường với chất lượng sản phẩm ổn định, giá cả hợp lý và dịch vụ chuyên nghiệp.
+                Với phương châm lấy uy tín – chất lượng – sự minh bạch làm nền tảng, Công Ty Tôn Thép Thành Phát luôn chú trọng hoàn thiện quy trình sản xuất, kinh doanh và phân phối, nhằm mang đến cho khách hàng những sản phẩm đạt tiêu chuẩn, rõ ràng về nguồn gốc, chủng loại và giá thành.
+                Trong giai đoạn đầu hoạt động, do còn hạn chế về kinh nghiệm và nguồn lực, công ty không tránh khỏi những thiếu sót ảnh hưởng đến sự hài lòng của Quý khách hàng. Chúng tôi xin chân thành ghi nhận và cam kết không ngừng cải tiến, nâng cao chất lượng sản phẩm cũng như phong cách phục vụ, đặc biệt từ năm 2024 trở đi, với mục tiêu phát triển bền vững và chuyên nghiệp hơn.
+                Sự tin tưởng và đồng hành của Quý khách hàng chính là động lực và niềm vinh hạnh đối với Tôn Thép Thành Phát trong suốt quá trình phát triển.
+                Kính chúc Quý khách hàng sức khỏe, thành công và thịnh vượng.
+                Chúc cho mối quan hệ hợp tác giữa Quý khách hàng và Công Ty Tôn Thép Thành Phát ngày càng bền chặt.
+                Trân trọng cảm ơn!`.trim(),
                 companyEmail: "info@tonthanhphat.vn",
                 companyPhone: ["0901 234 567", "0902 345 678"],
                 addresses: [
@@ -63,7 +71,7 @@ async function main() {
     // Create Categories
     let tonKemCategory, tonMauCategory, tonXopCategory, tongThepCategory;
     const existingCategories = await prisma.category.findFirst();
-    
+
     if (!existingCategories) {
         // Tạo category cha: Sản Phẩm
         const sanPham = await prisma.category.create({
@@ -99,7 +107,7 @@ async function main() {
         // Tạo các category khác
         await prisma.category.createMany({
             data: [
-                { name: "Trang Chủ", slug: "trang-chu", order: 0, isActive: true },
+                { name: "Trang Chủ", slug: "", order: 0, isActive: true },
                 { name: "Giới Thiệu", slug: "gioi-thieu", order: 2, isActive: true },
                 { name: "Tin Tức", slug: "tin-tuc", order: 3, isActive: true },
                 { name: "Liên Hệ", slug: "lien-he", order: 4, isActive: true },
@@ -135,10 +143,7 @@ async function main() {
 <li>Phù hợp mọi loại công trình</li>
 </ul>`,
                 thumbnail: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800",
-                images: [
-                    "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800",
-                    "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800",
-                ],
+                images: ["https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800", "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800"],
                 specs: [
                     { key: "Thương hiệu", value: "Hoa Sen" },
                     { key: "Độ dày", value: "0.35mm" },

@@ -17,17 +17,22 @@ export function SecurityTab() {
     const handleChangePassword = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!currentPassword || !newPassword || !confirmPassword) {
+        // Trim all password fields
+        const trimmedCurrentPassword = currentPassword.trim();
+        const trimmedNewPassword = newPassword.trim();
+        const trimmedConfirmPassword = confirmPassword.trim();
+
+        if (!trimmedCurrentPassword || !trimmedNewPassword || !trimmedConfirmPassword) {
             toast.error("Vui lòng nhập đầy đủ thông tin");
             return;
         }
 
-        if (newPassword !== confirmPassword) {
+        if (trimmedNewPassword !== trimmedConfirmPassword) {
             toast.error("Mật khẩu mới không khớp");
             return;
         }
 
-        if (newPassword.length < 6) {
+        if (trimmedNewPassword.length < 6) {
             toast.error("Mật khẩu mới phải có ít nhất 6 ký tự");
             return;
         }
@@ -35,7 +40,7 @@ export function SecurityTab() {
         try {
             setIsLoading(true);
             // Note: Need to implement changePassword in AuthApi
-            // await AuthApi.changePassword(currentPassword, newPassword);
+            // await AuthApi.changePassword(trimmedCurrentPassword, trimmedNewPassword);
             toast.success("Đã đổi mật khẩu thành công");
             setCurrentPassword("");
             setNewPassword("");

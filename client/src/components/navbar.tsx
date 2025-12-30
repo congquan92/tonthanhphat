@@ -5,15 +5,12 @@ import { ContactInfo } from "@/components/type";
 import { NavbarClient } from "@/components/navbar-client";
 
 export default async function Navbar() {
-    // Fetch contact info và navLinks từ API
     const [contactRes, navLinksRes] = await Promise.all([ContactInfoApi.getContactInfo(), CategoryApi.getNavLinks()]);
-
     const contactInfo: ContactInfo = contactRes.data;
     const navLinks = navLinksRes.data;
     // console.log("Nav Links:", navLinks);
     // console.log("Contact Info:", contactInfo);
     const urlZalo = contactInfo.socialLinks.find((l) => l.platform.toLocaleLowerCase() === "zalo")?.url;
-
     const phoneLink = `tel:${contactInfo.companyPhone[0]?.replace(/\s/g, "")}`;
 
     return (
