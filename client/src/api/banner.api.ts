@@ -3,7 +3,7 @@ import { axiosInstance } from "@/lib/axios";
 export interface Banner {
     id: string;
     imageUrl: string;
-    publicId?: string; // Cloudinary public ID
+    publicId?: string;
     alt: string;
     order: number;
     isActive: boolean;
@@ -13,7 +13,7 @@ export interface Banner {
 
 export interface CreateBannerInput {
     imageUrl: string;
-    publicId?: string; // Cloudinary public ID
+    publicId?: string; 
     alt: string;
     order: number;
     isActive?: boolean;
@@ -21,7 +21,7 @@ export interface CreateBannerInput {
 
 export interface UpdateBannerInput {
     imageUrl?: string;
-    publicId?: string; // Cloudinary public ID
+    publicId?: string; 
     alt?: string;
     order?: number;
     isActive?: boolean;

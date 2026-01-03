@@ -3,14 +3,10 @@ import { CloudinaryHelper } from "../lib/cloudinary.js";
 
 export const ProductController = {
     // ==================== PUBLIC ====================
-
     getAllProducts: async (req, res) => {
         try {
             const { category, limit } = req.query;
-            const products = await ProductService.getAllProducts(
-                category || null,
-                limit ? parseInt(limit) : null
-            );
+            const products = await ProductService.getAllProducts(category || null, limit ? parseInt(limit) : null);
             return res.json({ success: true, data: products });
         } catch (error) {
             console.error("getAllProducts error:", error);
@@ -21,9 +17,7 @@ export const ProductController = {
     getFeaturedProducts: async (req, res) => {
         try {
             const { limit } = req.query;
-            const products = await ProductService.getFeaturedProducts(
-                limit ? parseInt(limit) : 8
-            );
+            const products = await ProductService.getFeaturedProducts(limit ? parseInt(limit) : 8);
             return res.json({ success: true, data: products });
         } catch (error) {
             console.error("getFeaturedProducts error:", error);
@@ -35,21 +29,16 @@ export const ProductController = {
         try {
             const { slug } = req.params;
             const product = await ProductService.getProductBySlug(slug);
-            
+
             if (!product) {
                 return res.status(404).json({ success: false, message: "Không tìm thấy sản phẩm" });
             }
 
             // Lấy sản phẩm liên quan
-            const relatedProducts = await ProductService.getRelatedProducts(
-                product.id,
-                product.categoryId,
-                4
-            );
-
-            return res.json({ 
-                success: true, 
-                data: { ...product, relatedProducts } 
+            const relatedProducts = await ProductService.getRelatedProducts(product.id, product.categoryId, 4);
+            return res.json({
+                success: true,
+                data: { ...product, relatedProducts },
             });
         } catch (error) {
             console.error("getProductBySlug error:", error);
@@ -73,7 +62,7 @@ export const ProductController = {
         try {
             const { id } = req.params;
             const product = await ProductService.getProductById(id);
-            
+
             if (!product) {
                 return res.status(404).json({ success: false, message: "Không tìm thấy sản phẩm" });
             }
@@ -91,7 +80,7 @@ export const ProductController = {
             return res.status(201).json({ success: true, data: product, message: "Tạo sản phẩm thành công" });
         } catch (error) {
             console.error("createProduct error:", error);
-            
+
             // Cleanup uploaded images on error
             if (req.body.imagePublicIds && Array.isArray(req.body.imagePublicIds)) {
                 console.log("Cleaning up uploaded images due to error...");
@@ -104,7 +93,7 @@ export const ProductController = {
                     }
                 }
             }
-            
+
             if (error.code === "P2002") {
                 return res.status(400).json({ success: false, message: "Slug đã tồn tại" });
             }
@@ -119,10 +108,6 @@ export const ProductController = {
             return res.json({ success: true, data: product, message: "Cập nhật sản phẩm thành công" });
         } catch (error) {
             console.error("updateProduct error:", error);
-            
-            // Note: Cleanup for update is handled on client-side
-            // because we track "newly uploaded" images there
-            
             if (error.code === "P2002") {
                 return res.status(400).json({ success: false, message: "Slug đã tồn tại" });
             }
@@ -144,8 +129,6 @@ export const ProductController = {
     hardDeleteProduct: async (req, res) => {
         try {
             const { id } = req.params;
-            
-            // Get product to extract imagePublicIds for cleanup
             const product = await ProductService.getProductById(id);
             if (product?.imagePublicIds && Array.isArray(product.imagePublicIds)) {
                 console.log("Deleting product images from Cloudinary...");
@@ -159,7 +142,7 @@ export const ProductController = {
                     }
                 }
             }
-            
+
             await ProductService.hardDeleteProduct(id);
             return res.json({ success: true, message: "Xóa vĩnh viễn sản phẩm thành công" });
         } catch (error) {
@@ -173,7 +156,7 @@ export const ProductController = {
     uploadImage: async (req, res) => {
         try {
             const { image, folder } = req.body;
-            
+
             if (!image) {
                 return res.status(400).json({ success: false, message: "Thiếu dữ liệu ảnh" });
             }
@@ -189,7 +172,7 @@ export const ProductController = {
     uploadMultipleImages: async (req, res) => {
         try {
             const { images, folder } = req.body;
-            
+
             if (!images || !Array.isArray(images)) {
                 return res.status(400).json({ success: false, message: "Thiếu dữ liệu ảnh" });
             }
@@ -205,7 +188,7 @@ export const ProductController = {
     deleteImage: async (req, res) => {
         try {
             const { publicId } = req.params;
-            
+
             if (!publicId) {
                 return res.status(400).json({ success: false, message: "Thiếu publicId" });
             }

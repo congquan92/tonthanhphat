@@ -4,13 +4,11 @@ const prisma = new PrismaClient();
 
 export const ProductService = {
     // ==================== PUBLIC ====================
-    
-    /**
-     * Lấy tất cả sản phẩm (public)
-     */
+
+    //Lấy tất cả sản phẩm (public)
     getAllProducts: async (categorySlug = null, limit = null) => {
         const where = { isActive: true };
-        
+
         if (categorySlug) {
             where.category = { slug: categorySlug };
         }
@@ -27,9 +25,7 @@ export const ProductService = {
         });
     },
 
-    /**
-     * Lấy sản phẩm nổi bật
-     */
+    // Lấy sản phẩm nổi bật
     getFeaturedProducts: async (limit = 8) => {
         return prisma.product.findMany({
             where: { isActive: true, isFeatured: true },
@@ -43,9 +39,7 @@ export const ProductService = {
         });
     },
 
-    /**
-     * Lấy chi tiết sản phẩm theo slug
-     */
+    // Lấy chi tiết sản phẩm theo slug
     getProductBySlug: async (slug) => {
         return prisma.product.findUnique({
             where: { slug },
@@ -57,9 +51,7 @@ export const ProductService = {
         });
     },
 
-    /**
-     * Lấy sản phẩm liên quan
-     */
+    // Lấy sản phẩm liên quan
     getRelatedProducts: async (productId, categoryId, limit = 4) => {
         return prisma.product.findMany({
             where: {
@@ -74,9 +66,7 @@ export const ProductService = {
 
     // ==================== ADMIN ====================
 
-    /**
-     * Lấy tất cả sản phẩm (admin - bao gồm cả inactive)
-     */
+    //Lấy tất cả sản phẩm (admin - bao gồm cả inactive)
     getAllProductsAdmin: async () => {
         return prisma.product.findMany({
             include: {
@@ -88,9 +78,7 @@ export const ProductService = {
         });
     },
 
-    /**
-     * Lấy sản phẩm theo ID
-     */
+    // Lấy sản phẩm theo ID
     getProductById: async (id) => {
         return prisma.product.findUnique({
             where: { id },
@@ -102,9 +90,7 @@ export const ProductService = {
         });
     },
 
-    /**
-     * Tạo sản phẩm mới
-     */
+    // Tạo sản phẩm mới
     createProduct: async (data) => {
         return prisma.product.create({
             data: {
@@ -129,9 +115,7 @@ export const ProductService = {
         });
     },
 
-    /**
-     * Cập nhật sản phẩm
-     */
+    // Cập nhật sản phẩm
     updateProduct: async (id, data) => {
         return prisma.product.update({
             where: { id },
@@ -157,9 +141,7 @@ export const ProductService = {
         });
     },
 
-    /**
-     * Xóa sản phẩm (soft delete)
-     */
+    //  Xóa sản phẩm (soft delete)
     softDeleteProduct: async (id) => {
         return prisma.product.update({
             where: { id },
@@ -167,9 +149,7 @@ export const ProductService = {
         });
     },
 
-    /**
-     * Xóa sản phẩm vĩnh viễn
-     */
+    //Xóa sản phẩm vĩnh viễn
     hardDeleteProduct: async (id) => {
         return prisma.product.delete({
             where: { id },

@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Mail, PhoneIcon } from "lucide-react";
 import ProductImageGallery from "@/app/(client)/san-pham/_components/product-image-gallery";
+import ProductCarousel from "@/app/(client)/san-pham/_components/product-carousel";
 
 interface ProductDetailPageProps {
     params: Promise<{
@@ -13,15 +14,16 @@ interface ProductDetailPageProps {
 
 export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
     const { slug } = await params;
-
     let productData;
     let contactInfo;
-    // let sameCategoryProducts = [];
+    let sameCategoryProducts;
 
     try {
         const [productRes, contactRes] = await Promise.all([ProductApi.getProductBySlug(slug), ContactInfoApi.getContactInfo()]);
+        console.log("Product Detail - Fetched product data:", productRes.data);
         productData = productRes.data;
         contactInfo = contactRes.data;
+        sameCategoryProducts = productRes.data.relatedProducts;
 
         // // Fetch related products from same category
         // if (productData.categoryId) {
@@ -145,7 +147,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
                 </div>
 
                 {/* Related Products */}
-                {/* <ProductCarousel title="Sản phẩm cùng loại" products={sameCategoryProducts} itemsPerPage={4} /> */}
+                <ProductCarousel title="Sản phẩm cùng loại" products={sameCategoryProducts} itemsPerPage={4} />
             </div>
         </div>
     );
