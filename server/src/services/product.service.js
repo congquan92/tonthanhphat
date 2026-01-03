@@ -114,6 +114,7 @@ export const ProductService = {
                 description: data.description,
                 thumbnail: data.thumbnail,
                 images: data.images,
+                imagePublicIds: data.imagePublicIds, // Store Cloudinary public IDs
                 specs: data.specs,
                 categoryId: data.categoryId,
                 order: data.order || 0,
@@ -141,6 +142,7 @@ export const ProductService = {
                 ...(data.description !== undefined && { description: data.description }),
                 ...(data.thumbnail !== undefined && { thumbnail: data.thumbnail }),
                 ...(data.images !== undefined && { images: data.images }),
+                ...(data.imagePublicIds !== undefined && { imagePublicIds: data.imagePublicIds }), // Update public IDs
                 ...(data.specs !== undefined && { specs: data.specs }),
                 ...(data.categoryId !== undefined && { categoryId: data.categoryId }),
                 ...(data.order !== undefined && { order: data.order }),

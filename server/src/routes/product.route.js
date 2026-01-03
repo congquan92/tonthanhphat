@@ -20,5 +20,6 @@ router.delete("/:id/permanent", authMiddleware, ProductController.hardDeleteProd
 // ==================== UPLOAD ====================
 router.post("/upload", authMiddleware, ProductController.uploadImage);
 router.post("/upload/multiple", authMiddleware, ProductController.uploadMultipleImages);
+router.delete("/upload/:publicId", authMiddleware, ProductController.deleteImage);
 
 export default router;

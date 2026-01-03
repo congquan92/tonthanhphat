@@ -91,6 +91,20 @@ export const ProductController = {
             return res.status(201).json({ success: true, data: product, message: "Tạo sản phẩm thành công" });
         } catch (error) {
             console.error("createProduct error:", error);
+            
+            // Cleanup uploaded images on error
+            if (req.body.imagePublicIds && Array.isArray(req.body.imagePublicIds)) {
+                console.log("Cleaning up uploaded images due to error...");
+                for (const publicId of req.body.imagePublicIds) {
+                    try {
+                        await CloudinaryHelper.deleteImage(publicId);
+                        console.log("Deleted image:", publicId);
+                    } catch (cleanupError) {
+                        console.error("Cloudinary cleanup error:", cleanupError);
+                    }
+                }
+            }
+            
             if (error.code === "P2002") {
                 return res.status(400).json({ success: false, message: "Slug đã tồn tại" });
             }
@@ -105,6 +119,10 @@ export const ProductController = {
             return res.json({ success: true, data: product, message: "Cập nhật sản phẩm thành công" });
         } catch (error) {
             console.error("updateProduct error:", error);
+            
+            // Note: Cleanup for update is handled on client-side
+            // because we track "newly uploaded" images there
+            
             if (error.code === "P2002") {
                 return res.status(400).json({ success: false, message: "Slug đã tồn tại" });
             }
@@ -127,11 +145,19 @@ export const ProductController = {
         try {
             const { id } = req.params;
             
-            // Lấy product để xóa ảnh trên Cloudinary
+            // Get product to extract imagePublicIds for cleanup
             const product = await ProductService.getProductById(id);
-            if (product?.images && Array.isArray(product.images)) {
-                // Xóa ảnh trên Cloudinary nếu có publicId
-                // (cần lưu publicId khi upload)
+            if (product?.imagePublicIds && Array.isArray(product.imagePublicIds)) {
+                console.log("Deleting product images from Cloudinary...");
+                for (const publicId of product.imagePublicIds) {
+                    try {
+                        await CloudinaryHelper.deleteImage(publicId);
+                        console.log("Deleted image:", publicId);
+                    } catch (cloudinaryError) {
+                        console.error("Cloudinary delete error:", cloudinaryError);
+                        // Continue with database deletion even if Cloudinary delete fails
+                    }
+                }
             }
             
             await ProductService.hardDeleteProduct(id);
@@ -173,6 +199,22 @@ export const ProductController = {
         } catch (error) {
             console.error("uploadMultipleImages error:", error);
             return res.status(500).json({ success: false, message: "Upload ảnh thất bại" });
+        }
+    },
+
+    deleteImage: async (req, res) => {
+        try {
+            const { publicId } = req.params;
+            
+            if (!publicId) {
+                return res.status(400).json({ success: false, message: "Thiếu publicId" });
+            }
+
+            await CloudinaryHelper.deleteImage(publicId);
+            return res.json({ success: true, message: "Xóa ảnh thành công" });
+        } catch (error) {
+            console.error("deleteImage error:", error);
+            return res.status(500).json({ success: false, message: "Xóa ảnh thất bại" });
         }
     },
 };

@@ -27,6 +27,7 @@ export default function NewProductPage() {
         description: "",
         thumbnail: "",
         images: [],
+        imagePublicIds: [], // Track Cloudinary public IDs
         specs: [],
         categoryId: "",
         order: 0,
@@ -74,35 +75,38 @@ export default function NewProductPage() {
         if (!files) return;
 
         for (const file of Array.from(files)) {
-            const reader = new FileReader();
-            reader.onload = async () => {
-                const base64 = reader.result as string;
-                try {
-                    toast.loading("Đang upload ảnh...", { id: "upload" });
-                    const res = await ProductApi.uploadImage(base64);
-                    if (res.success) {
-                        setFormData((prev) => ({
-                            ...prev,
-                            images: [...(prev.images || []), res.data.url],
-                            thumbnail: prev.thumbnail || res.data.url,
-                        }));
-                        toast.success("Upload thành công", { id: "upload" });
-                    }
-                } catch (error) {
-                    toast.error("Upload thất bại", { id: "upload" });
+            try {
+                toast.loading("Đang upload ảnh...", { id: "upload" });
+                const res = await ProductApi.uploadImageFromFile(file);
+                if (res.success) {
+                    setFormData((prev) => ({
+                        ...prev,
+                        images: [...(prev.images || []), res.data.url],
+                        imagePublicIds: [...(prev.imagePublicIds || []), res.data.publicId],
+                        thumbnail: prev.thumbnail || res.data.url,
+                    }));
+                    toast.success("Upload thành công", { id: "upload" });
                 }
-            };
-            reader.readAsDataURL(file);
+            } catch (error) {
+                console.error("Upload error:", error);
+                toast.error("Upload thất bại", { id: "upload" });
+            }
         }
     };
 
     // Remove image
     const removeImage = (url: string) => {
-        setFormData((prev) => ({
-            ...prev,
-            images: prev.images?.filter((img) => img !== url),
-            thumbnail: prev.thumbnail === url ? prev.images?.find((img) => img !== url) || "" : prev.thumbnail,
-        }));
+        setFormData((prev) => {
+            const index = prev.images?.indexOf(url) ?? -1;
+            const newImages = prev.images?.filter((img) => img !== url);
+            const newPublicIds = index >= 0 ? prev.imagePublicIds?.filter((_, i) => i !== index) : prev.imagePublicIds;
+            return {
+                ...prev,
+                images: newImages,
+                imagePublicIds: newPublicIds,
+                thumbnail: prev.thumbnail === url ? newImages?.find((img) => img !== url) || "" : prev.thumbnail,
+            };
+        });
     };
 
     // Set as thumbnail
@@ -152,6 +156,18 @@ export default function NewProductPage() {
             toast.success("Tạo sản phẩm thành công");
             router.push("/admin/products");
         } catch (error: any) {
+            // Cleanup uploaded images on error
+            if (formData.imagePublicIds && formData.imagePublicIds.length > 0) {
+                console.log("Cleaning up uploaded images due to error...");
+                for (const publicId of formData.imagePublicIds) {
+                    try {
+                        await ProductApi.deleteImage(publicId);
+                        console.log("Deleted image:", publicId);
+                    } catch (cleanupError) {
+                        console.error("Failed to cleanup image:", publicId, cleanupError);
+                    }
+                }
+            }
             toast.error(error.response?.data?.message || "Không thể tạo sản phẩm");
         } finally {
             setIsLoading(false);

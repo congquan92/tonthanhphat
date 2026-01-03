@@ -32,6 +32,7 @@ export default function EditProductPage() {
         description: "",
         thumbnail: "",
         images: [],
+        imagePublicIds: [], // Track Cloudinary public IDs
         specs: [],
         categoryId: "",
         order: 0,
@@ -55,6 +56,7 @@ export default function EditProductPage() {
                         description: productRes.data.description || "",
                         thumbnail: productRes.data.thumbnail || "",
                         images: productRes.data.images || [],
+                        imagePublicIds: productRes.data.imagePublicIds || [], // Load existing publicIds
                         specs: productRes.data.specs || [],
                         categoryId: productRes.data.categoryId || "",
                         order: productRes.data.order || 0,
@@ -80,35 +82,38 @@ export default function EditProductPage() {
         if (!files) return;
 
         for (const file of Array.from(files)) {
-            const reader = new FileReader();
-            reader.onload = async () => {
-                const base64 = reader.result as string;
-                try {
-                    toast.loading("Đang upload ảnh...", { id: "upload" });
-                    const res = await ProductApi.uploadImage(base64);
-                    if (res.success) {
-                        setFormData((prev) => ({
-                            ...prev,
-                            images: [...(prev.images || []), res.data.url],
-                            thumbnail: prev.thumbnail || res.data.url,
-                        }));
-                        toast.success("Upload thành công", { id: "upload" });
-                    }
-                } catch (error) {
-                    toast.error("Upload thất bại", { id: "upload" });
+            try {
+                toast.loading("Đang upload ảnh...", { id: "upload" });
+                const res = await ProductApi.uploadImageFromFile(file);
+                if (res.success) {
+                    setFormData((prev) => ({
+                        ...prev,
+                        images: [...(prev.images || []), res.data.url],
+                        imagePublicIds: [...(prev.imagePublicIds || []), res.data.publicId],
+                        thumbnail: prev.thumbnail || res.data.url,
+                    }));
+                    toast.success("Upload thành công", { id: "upload" });
                 }
-            };
-            reader.readAsDataURL(file);
+            } catch (error) {
+                console.error("Upload error:", error);
+                toast.error("Upload thất bại", { id: "upload" });
+            }
         }
     };
 
     // Remove image
     const removeImage = (url: string) => {
-        setFormData((prev) => ({
-            ...prev,
-            images: prev.images?.filter((img) => img !== url),
-            thumbnail: prev.thumbnail === url ? prev.images?.find((img) => img !== url) || "" : prev.thumbnail,
-        }));
+        setFormData((prev) => {
+            const index = prev.images?.indexOf(url) ?? -1;
+            const newImages = prev.images?.filter((img) => img !== url);
+            const newPublicIds = index >= 0 ? prev.imagePublicIds?.filter((_, i) => i !== index) : prev.imagePublicIds;
+            return {
+                ...prev,
+                images: newImages,
+                imagePublicIds: newPublicIds,
+                thumbnail: prev.thumbnail === url ? newImages?.find((img) => img !== url) || "" : prev.thumbnail,
+            };
+        });
     };
 
     // Set as thumbnail
@@ -148,6 +153,12 @@ export default function EditProductPage() {
             return;
         }
 
+        // Track newly uploaded images (compare with original product)
+        const originalPublicIds = product?.imagePublicIds || [];
+        const newlyUploadedPublicIds = formData.imagePublicIds?.filter(
+            (id) => !originalPublicIds.includes(id)
+        ) || [];
+
         try {
             setIsSaving(true);
             await ProductApi.updateProduct(productId, {
@@ -158,6 +169,18 @@ export default function EditProductPage() {
             toast.success("Cập nhật sản phẩm thành công");
             router.push("/admin/products");
         } catch (error: any) {
+            // Cleanup newly uploaded images on error
+            if (newlyUploadedPublicIds.length > 0) {
+                console.log("Cleaning up newly uploaded images due to error...");
+                for (const publicId of newlyUploadedPublicIds) {
+                    try {
+                        await ProductApi.deleteImage(publicId);
+                        console.log("Deleted image:", publicId);
+                    } catch (cleanupError) {
+                        console.error("Failed to cleanup image:", publicId, cleanupError);
+                    }
+                }
+            }
             toast.error(error.response?.data?.message || "Không thể cập nhật sản phẩm");
         } finally {
             setIsSaving(false);

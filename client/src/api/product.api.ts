@@ -8,6 +8,7 @@ export interface Product {
     description?: string;
     thumbnail?: string;
     images?: string[];
+    imagePublicIds?: string[]; // Cloudinary public IDs corresponding to images
     specs?: { key: string; value: string }[];
     categoryId?: string;
     category?: {
@@ -29,6 +30,7 @@ export interface CreateProductInput {
     description?: string;
     thumbnail?: string;
     images?: string[];
+    imagePublicIds?: string[]; // Cloudinary public IDs
     specs?: { key: string; value: string }[];
     categoryId?: string;
     order?: number;
@@ -43,6 +45,7 @@ export interface UpdateProductInput {
     description?: string;
     thumbnail?: string;
     images?: string[];
+    imagePublicIds?: string[]; // Cloudinary public IDs
     specs?: { key: string; value: string }[];
     categoryId?: string | null;
     order?: number;
@@ -110,6 +113,33 @@ export const ProductApi = {
 
     uploadMultipleImages: async (images: string[], folder?: string) => {
         const res = await axiosInstance.post("/products/upload/multiple", { images, folder });
+        return res.data;
+    },
+
+    uploadImageFromFile: async (file: File, folder?: string): Promise<{ success: boolean; data: { url: string; publicId: string } }> => {
+        return new Promise((resolve, reject) => {
+            if (!file.type.startsWith("image/")) {
+                reject(new Error("File phải là ảnh"));
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onloadend = async () => {
+                try {
+                    const base64 = reader.result as string;
+                    const result = await ProductApi.uploadImage(base64, folder || "products");
+                    resolve(result);
+                } catch (error) {
+                    reject(error);
+                }
+            };
+            reader.onerror = () => reject(new Error("Không thể đọc file"));
+            reader.readAsDataURL(file);
+        });
+    },
+
+    deleteImage: async (publicId: string) => {
+        const res = await axiosInstance.delete(`/products/upload/${publicId}`);
         return res.data;
     },
 };

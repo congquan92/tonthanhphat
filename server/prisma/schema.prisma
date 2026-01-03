@@ -63,6 +63,7 @@ model Product {
   shortDesc   String? // Mô tả ngắn cho listing
   description String?   @db.Text // Mô tả chi tiết (HTML)
   images      Json? // Array URLs hình ảnh từ Cloudinary
+  imagePublicIds Json? // Array Cloudinary public IDs tương ứng với images
   thumbnail   String? // URL ảnh đại diện
   specs       Json? // Thông số kỹ thuật [{key, value}]
   categoryId  String?

@@ -293,6 +293,7 @@ async function main() {
                     description: product.description,
                     thumbnail: product.thumbnail,
                     images: product.images,
+                    imagePublicIds: [], // Empty for sample data (placeholder images không có publicId)
                     specs: product.specs,
                     categoryId: product.categoryId,
                     isFeatured: product.isFeatured,
