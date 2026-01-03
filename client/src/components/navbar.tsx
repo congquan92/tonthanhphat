@@ -8,11 +8,8 @@ export default async function Navbar() {
     const [contactRes, navLinksRes] = await Promise.all([ContactInfoApi.getContactInfo(), CategoryApi.getNavLinks()]);
     const contactInfo: ContactInfo = contactRes.data;
     const navLinks = navLinksRes.data;
-    // console.log("Nav Links:", navLinks);
-    // console.log("Contact Info:", contactInfo);
     const urlZalo = contactInfo.socialLinks.find((l) => l.platform.toLocaleLowerCase() === "zalo")?.url;
     const phoneLink = `tel:${contactInfo.companyPhone[0]?.replace(/\s/g, "")}`;
-
     return (
         <header className="border-b border-border bg-background/95 backdrop-blur-md sticky top-0 z-50">
             {/* Top Bar */}
