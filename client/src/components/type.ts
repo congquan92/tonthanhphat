@@ -20,6 +20,7 @@ export interface ContactInfo {
     companyPhone: string[];
     addresses: Address[];
     socialLinks: SocialLink[];
+    iframeMap?: string;
     createdAt: Date;
     updatedAt: Date;
 }

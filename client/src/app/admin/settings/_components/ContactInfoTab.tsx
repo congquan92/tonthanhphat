@@ -20,6 +20,7 @@ interface ContactInfo {
     companyPhone?: string[];
     addresses?: { type: string; address: string }[];
     socialLinks?: { platform: string; url: string; icon: string }[];
+    iframeMap?: string;
 }
 
 const PLATFORMS = [
@@ -41,6 +42,7 @@ export function ContactInfoTab() {
         companyPhone: [""],
         addresses: [{ type: "Trụ sở chính", address: "" }],
         socialLinks: [{ platform: "Facebook", url: "", icon: "facebook" }],
+        iframeMap: "",
     });
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
@@ -71,7 +73,7 @@ export function ContactInfoTab() {
     const handleSave = async () => {
         try {
             setIsSaving(true);
-            
+
             // Trim all string fields before sending to server
             const trimmedData = {
                 ...contactInfo,
@@ -81,18 +83,23 @@ export function ContactInfoTab() {
                 companySlogan: contactInfo.companySlogan?.trim(),
                 companyDescription: contactInfo.companyDescription?.trim(),
                 companyEmail: contactInfo.companyEmail?.trim(),
-                companyPhone: contactInfo.companyPhone?.map(phone => phone.trim()).filter(phone => phone !== ""),
-                addresses: contactInfo.addresses?.map(addr => ({
-                    type: addr.type.trim(),
-                    address: addr.address.trim()
-                })).filter(addr => addr.type !== "" && addr.address !== ""),
-                socialLinks: contactInfo.socialLinks?.map(link => ({
-                    platform: link.platform.trim(),
-                    url: link.url.trim(),
-                    icon: link.icon.trim()
-                })).filter(link => link.url !== ""),
+                iframeMap: contactInfo.iframeMap?.trim(),
+                companyPhone: contactInfo.companyPhone?.map((phone) => phone.trim()).filter((phone) => phone !== ""),
+                addresses: contactInfo.addresses
+                    ?.map((addr) => ({
+                        type: addr.type.trim(),
+                        address: addr.address.trim(),
+                    }))
+                    .filter((addr) => addr.type !== "" && addr.address !== ""),
+                socialLinks: contactInfo.socialLinks
+                    ?.map((link) => ({
+                        platform: link.platform.trim(),
+                        url: link.url.trim(),
+                        icon: link.icon.trim(),
+                    }))
+                    .filter((link) => link.url !== ""),
             };
-            
+
             await ContactInfoApi.updateContactInfo(trimmedData as any);
             toast.success("Đã lưu thông tin thành công");
         } catch (error) {
@@ -256,35 +263,54 @@ export function ContactInfoTab() {
                 </CardContent>
             </Card>
 
-            {/* Addresses */}
+            {/* Addresses & Google Maps */}
             <Card className="rounded-2xl border-0 bg-white shadow-lg shadow-slate-200/50 dark:bg-slate-800 dark:shadow-slate-900/50">
                 <CardHeader className="border-b border-slate-100 pb-4 dark:border-slate-700">
                     <div className="flex items-center justify-between">
                         <div>
                             <CardTitle className="flex items-center gap-2 text-lg font-semibold">
-                                <MapPin className="h-5 w-5 text-red-500" />
-                                Địa chỉ
+                                <MapPin className="h-5 w-5 text-red-500" /> Địa chỉ & Bản đồ
                             </CardTitle>
-                            <CardDescription>Các địa chỉ chi nhánh</CardDescription>
+                            <CardDescription>Các địa chỉ chi nhánh và Google Maps</CardDescription>
                         </div>
                         <Button variant="ghost" size="sm" onClick={addAddress} className="text-blue-600">
                             <Plus className="mr-1 h-4 w-4" />
-                            Thêm
+                            Thêm địa chỉ
                         </Button>
                     </div>
                 </CardHeader>
-                <CardContent className="space-y-3 p-6">
-                    {contactInfo.addresses?.map((addr, index) => (
-                        <div key={index} className="flex gap-3">
-                            <Input placeholder="Loại (VD: Nhà máy, Văn phòng)" value={addr.type} onChange={(e) => updateAddress(index, "type", e.target.value)} className="w-1/3" />
-                            <Input placeholder="Địa chỉ đầy đủ" value={addr.address} onChange={(e) => updateAddress(index, "address", e.target.value)} className="flex-1" />
-                            {(contactInfo.addresses?.length || 0) > 1 && (
-                                <Button variant="ghost" size="icon" onClick={() => removeAddress(index)} className="shrink-0 text-red-500 hover:text-red-600">
-                                    <Trash2 className="h-4 w-4" />
-                                </Button>
-                            )}
-                        </div>
-                    ))}
+                <CardContent className="space-y-6 p-6">
+                    {/* Addresses */}
+                    <div className="space-y-3">
+                        <Label className="text-sm font-semibold">Danh sách địa chỉ</Label>
+                        {contactInfo.addresses?.map((addr, index) => (
+                            <div key={index} className="flex gap-3">
+                                <Input placeholder="Loại (VD: Nhà máy, Văn phòng)" value={addr.type} onChange={(e) => updateAddress(index, "type", e.target.value)} className="w-1/3" />
+                                <Input placeholder="Địa chỉ đầy đủ" value={addr.address} onChange={(e) => updateAddress(index, "address", e.target.value)} className="flex-1" />
+                                {(contactInfo.addresses?.length || 0) > 1 && (
+                                    <Button variant="ghost" size="icon" onClick={() => removeAddress(index)} className="shrink-0 text-red-500 hover:text-red-600">
+                                        <Trash2 className="h-4 w-4" />
+                                    </Button>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="border-t border-slate-200 dark:border-slate-700"></div>
+
+                    {/* Google Maps */}
+                    <div className="space-y-3">
+                        <Label htmlFor="iframeMap" className="text-sm font-semibold">
+                            Google Maps Embed URL
+                        </Label>
+                        <textarea
+                            id="iframeMap"
+                            value={contactInfo.iframeMap || ""}
+                            onChange={(e) => setContactInfo((prev) => ({ ...prev, iframeMap: e.target.value }))}
+                            placeholder="https://www.google.com/maps/embed?pb=..."
+                            className="min-h-[40px] w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-slate-700 dark:bg-slate-900"
+                        />
+                    </div>
                 </CardContent>
             </Card>
 

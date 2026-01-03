@@ -44,7 +44,8 @@ async function main() {
                 Chúc cho mối quan hệ hợp tác giữa Quý khách hàng và Công Ty Tôn Thép Thành Phát ngày càng bền chặt.
                 Trân trọng cảm ơn!`.trim(),
                 companyEmail: "info@tonthanhphat.vn",
-                companyPhone: ["0901 234 567", "0902 345 678"],
+                companyPhone: ["0932695495", "0345658495"],
+                iframeMap: `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.0984083966237!2d106.56168487570342!3d10.80377455868737!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752bd4b454c559%3A0xfcc3c09ec0a8158!2zTmjDoCBtw6F5IHTDtG4gVGjDoG5oIFBow6F0!5e0!3m2!1sen!2s!4v1756277384042!5m2!1sen!2s`,
                 addresses: [
                     {
                         type: "Nhà máy",
@@ -293,7 +294,7 @@ async function main() {
                     description: product.description,
                     thumbnail: product.thumbnail,
                     images: product.images,
-                    imagePublicIds: [], // Empty for sample data (placeholder images không có publicId)
+                    imagePublicIds: [],
                     specs: product.specs,
                     categoryId: product.categoryId,
                     isFeatured: product.isFeatured,

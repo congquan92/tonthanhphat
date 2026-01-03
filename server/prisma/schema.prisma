@@ -29,6 +29,7 @@ model ContactInfo {
   companyDescription String?
 
   companyEmail String?
+  iframeMap    String?
 
   companyPhone Json?
   addresses    Json?
@@ -57,22 +58,22 @@ model Category {
 }
 
 model Product {
-  id          String    @id @default(uuid())
-  name        String
-  slug        String    @unique
-  shortDesc   String? // Mô tả ngắn cho listing
-  description String?   @db.Text // Mô tả chi tiết (HTML)
-  images      Json? // Array URLs hình ảnh từ Cloudinary
+  id             String    @id @default(uuid())
+  name           String
+  slug           String    @unique
+  shortDesc      String? // Mô tả ngắn cho listing
+  description    String?   @db.Text // Mô tả chi tiết (HTML)
+  images         Json? // Array URLs hình ảnh từ Cloudinary
   imagePublicIds Json? // Array Cloudinary public IDs tương ứng với images
-  thumbnail   String? // URL ảnh đại diện
-  specs       Json? // Thông số kỹ thuật [{key, value}]
-  categoryId  String?
-  category    Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  order       Int       @default(0)
-  isActive    Boolean   @default(true)
-  isFeatured  Boolean   @default(false) // Sản phẩm nổi bật cho homepage
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  thumbnail      String? // URL ảnh đại diện
+  specs          Json? // Thông số kỹ thuật [{key, value}]
+  categoryId     String?
+  category       Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  order          Int       @default(0)
+  isActive       Boolean   @default(true)
+  isFeatured     Boolean   @default(false) // Sản phẩm nổi bật cho homepage
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 
   @@map("products")
 }
@@ -80,7 +81,7 @@ model Product {
 model Banner {
   id        String   @id @default(uuid())
   imageUrl  String
-  publicId  String?  // Cloudinary public ID for easier deletion
+  publicId  String? // Cloudinary public ID for easier deletion
   alt       String
   order     Int      @unique
   isActive  Boolean  @default(true)
@@ -89,4 +90,3 @@ model Banner {
 
   @@map("banners")
 }
-

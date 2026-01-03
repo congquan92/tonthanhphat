@@ -22,4 +22,5 @@ export const ValidateContactInfo = z.object({
     companyPhone: z.array(z.string().min(10, "Số điện thoại không hợp lệ")).optional(),
     socialLinks: z.array(SocialLinkSchema).optional(),
     addresses: z.array(AddressSchema).optional(),
+    iframeMap: z.string().optional(),
 });
