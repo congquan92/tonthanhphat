@@ -6,14 +6,21 @@ export const ProductService = {
     // ==================== PUBLIC ====================
 
     //Lấy tất cả sản phẩm (public)
-    getAllProducts: async (categorySlug = null, limit = null) => {
+    getAllProducts: async (categorySlug = null, page = 1, pageSize = 20) => {
         const where = { isActive: true };
 
         if (categorySlug) {
             where.category = { slug: categorySlug };
         }
 
-        return prisma.product.findMany({
+        // Calculate skip for pagination
+        const skip = (page - 1) * pageSize;
+
+        // Get total count
+        const total = await prisma.product.count({ where });
+
+        // Get products with pagination
+        const products = await prisma.product.findMany({
             where,
             include: {
                 category: {
@@ -21,8 +28,19 @@ export const ProductService = {
                 },
             },
             orderBy: { order: "asc" },
-            ...(limit && { take: limit }),
+            skip,
+            take: pageSize,
         });
+
+        return {
+            products,
+            pagination: {
+                page,
+                pageSize,
+                total,
+                totalPages: Math.ceil(total / pageSize),
+            },
+        };
     },
 
     // Lấy sản phẩm nổi bật

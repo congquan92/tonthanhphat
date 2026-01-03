@@ -55,10 +55,11 @@ export interface UpdateProductInput {
 
 export const ProductApi = {
     // ==================== PUBLIC ====================
-    getAllProducts: async (categorySlug?: string, limit?: number) => {
+    getAllProducts: async (page?: number, pageSize?: number, categorySlug?: string) => {
         const params = new URLSearchParams();
+        if (page) params.append("page", page.toString());
+        if (pageSize) params.append("pageSize", pageSize.toString());
         if (categorySlug) params.append("category", categorySlug);
-        if (limit) params.append("limit", limit.toString());
         const res = await axiosInstance.get(`/products?${params.toString()}`);
         return res.data;
     },

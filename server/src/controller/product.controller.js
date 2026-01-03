@@ -5,9 +5,13 @@ export const ProductController = {
     // ==================== PUBLIC ====================
     getAllProducts: async (req, res) => {
         try {
-            const { category, limit } = req.query;
-            const products = await ProductService.getAllProducts(category || null, limit ? parseInt(limit) : null);
-            return res.json({ success: true, data: products });
+            const { category, page, pageSize } = req.query;
+            const result = await ProductService.getAllProducts(
+                category || null,
+                page ? parseInt(page) : 1,
+                pageSize ? parseInt(pageSize) : 20
+            );
+            return res.json({ success: true, data: result.products, pagination: result.pagination });
         } catch (error) {
             console.error("getAllProducts error:", error);
             return res.status(500).json({ success: false, message: "Lỗi hệ thống" });
