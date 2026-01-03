@@ -5,7 +5,6 @@ import { useState } from "react";
 import { Menu, X, Phone, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 type NavLink = {
     href: string;
@@ -24,23 +23,33 @@ interface NavbarClientProps {
 
 // Desktop Navigation Item Component
 function NavItem({ link }: { link: NavLink }) {
+    const [isOpen, setIsOpen] = useState(false);
+
     if (link.submenu && link.submenu.length > 0) {
         return (
-            <DropdownMenu>
-                <DropdownMenuTrigger asChild>
+            <div className="relative" onMouseEnter={() => setIsOpen(true)} onMouseLeave={() => setIsOpen(false)}>
+                <Link href={link.href}>
                     <Button variant="ghost" className="gap-1">
                         {link.label}
-                        <ChevronDown className="h-4 w-4" />
+                        <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? "rotate-180" : ""}`} />
                     </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-48">
-                    {link.submenu.map((subItem) => (
-                        <DropdownMenuItem key={subItem.href} asChild>
-                            <Link href={subItem.href}>{subItem.label}</Link>
-                        </DropdownMenuItem>
-                    ))}
-                </DropdownMenuContent>
-            </DropdownMenu>
+                </Link>
+
+                {/* Dropdown Menu */}
+                {isOpen && (
+                    <div className="absolute left-0 top-full mt-1 w-48 bg-white border border-gray-200 shadow-lg z-50 animate-in fade-in-0 zoom-in-95">
+                        {link.submenu.map((subItem) => (
+                            <Link
+                                key={subItem.href}
+                                href={subItem.href}
+                                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                            >
+                                {subItem.label}
+                            </Link>
+                        ))}
+                    </div>
+                )}
+            </div>
         );
     }
 

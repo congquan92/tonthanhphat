@@ -20,18 +20,9 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 
     try {
         const [productRes, contactRes] = await Promise.all([ProductApi.getProductBySlug(slug), ContactInfoApi.getContactInfo()]);
-        console.log("Product Detail - Fetched product data:", productRes.data);
         productData = productRes.data;
         contactInfo = contactRes.data;
         sameCategoryProducts = productRes.data.relatedProducts;
-
-        // // Fetch related products from same category
-        // if (productData.categoryId) {
-        //     const relatedRes = await ProductApi.getAllProductsAdmin();
-        //     sameCategoryProducts = relatedRes.data
-        //         .filter((p: any) => p.categoryId === productData.categoryId && p.id !== productData.id && p.isActive)
-        //         .slice(0, 8); // Get up to 8 products
-        // }
     } catch {
         notFound(); // trang mặc định 404 của Next.js
     }
