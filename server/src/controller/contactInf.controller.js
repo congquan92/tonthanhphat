@@ -1,6 +1,7 @@
 import { ContactInfService } from "../services/contactInf.service.js";
 import { ValidateContactInfo } from "../lib/validate.js";
 export const ContactInfoController = {
+    // ==================== PUBLIC ====================
     getContactInfo: async (req, res) => {
         try {
             const contactInfo = await ContactInfService.getContactInfo();
@@ -11,6 +12,7 @@ export const ContactInfoController = {
         }
     },
 
+    // ==================== ADMIN ====================
     updateContactInfo: async (req, res) => {
         try {
             const result = ValidateContactInfo.safeParse(req.body); // true or false

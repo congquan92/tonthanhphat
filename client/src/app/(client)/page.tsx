@@ -2,7 +2,7 @@ import { ContactInfoApi } from "@/api/contacinfo.api";
 import Introduce from "@/components/introduce";
 import { ContactInfo } from "@/components/type";
 import BannerCarousel from "@/components/banner-carousel";
-import ProductCarousel from "@/components/product-carousel";
+import ProductFet from "@/components/product-fet";
 import { ProductApi } from "@/api/product.api";
 import { BannerApi } from "@/api/banner.api";
 
@@ -16,7 +16,7 @@ export default async function Home() {
         <div>
             <BannerCarousel banners={banners} />
             <Introduce data={contactInfo} />
-            <ProductCarousel slogan={contactInfo.companySlogan} products={products} />
+            <ProductFet slogan={contactInfo.companySlogan} products={products} />
         </div>
     );
 }

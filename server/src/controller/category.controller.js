@@ -1,22 +1,12 @@
 import { CategoryService } from "../services/category.service.js";
 
 export const CategoryController = {
-    // Lấy tất cả categories (public)
+    // ==================== PUBLIC ====================
+    // Lấy tất cả categories
     getAllCategories: async (req, res) => {
         try {
             const includeChildren = req.query.includeChildren === "true";
             const categories = await CategoryService.getAllCategories(includeChildren);
-            return res.json({ success: true, data: categories });
-        } catch (error) {
-            console.error("Lỗi Controller:", error);
-            return res.status(500).json({ success: false, message: "Lỗi hệ thống" });
-        }
-    },
-
-    // Lấy tất cả categories cho admin (bao gồm inactive)
-    getAllCategoriesAdmin: async (req, res) => {
-        try {
-            const categories = await CategoryService.getAllCategoriesAdmin();
             return res.json({ success: true, data: categories });
         } catch (error) {
             console.error("Lỗi Controller:", error);
@@ -35,6 +25,17 @@ export const CategoryController = {
         }
     },
 
+    // Lấy navLinks format sẵn cho navbar
+    getNavLinks: async (req, res) => {
+        try {
+            const navLinks = await CategoryService.getNavLinks();
+            return res.json({ success: true, data: navLinks });
+        } catch (error) {
+            console.error("Lỗi Controller:", error);
+            return res.status(500).json({ success: false, message: "Lỗi hệ thống" });
+        }
+    },
+
     // Lấy children của một category
     getCategoryChildren: async (req, res) => {
         try {
@@ -44,6 +45,19 @@ export const CategoryController = {
             }
             const children = await CategoryService.getCategoryChildren(parentId);
             return res.json({ success: true, data: children });
+        } catch (error) {
+            console.error("Lỗi Controller:", error);
+            return res.status(500).json({ success: false, message: "Lỗi hệ thống" });
+        }
+    },
+
+    // ==================== ADMIN ====================
+
+    // Lấy tất cả categories cho admin (bao gồm inactive)
+    getAllCategoriesAdmin: async (req, res) => {
+        try {
+            const categories = await CategoryService.getAllCategoriesAdmin();
+            return res.json({ success: true, data: categories });
         } catch (error) {
             console.error("Lỗi Controller:", error);
             return res.status(500).json({ success: false, message: "Lỗi hệ thống" });
@@ -222,17 +236,6 @@ export const CategoryController = {
                 success: true,
                 message: "Cập nhật thứ tự các danh mục thành công",
             });
-        } catch (error) {
-            console.error("Lỗi Controller:", error);
-            return res.status(500).json({ success: false, message: "Lỗi hệ thống" });
-        }
-    },
-
-    // Lấy navLinks format sẵn cho navbar
-    getNavLinks: async (req, res) => {
-        try {
-            const navLinks = await CategoryService.getNavLinks();
-            return res.json({ success: true, data: navLinks });
         } catch (error) {
             console.error("Lỗi Controller:", error);
             return res.status(500).json({ success: false, message: "Lỗi hệ thống" });

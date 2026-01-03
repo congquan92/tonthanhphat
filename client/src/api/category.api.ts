@@ -4,8 +4,8 @@ import { CreateCategoryInput, UpdateCategoryInput } from "@/api/type";
 export const CategoryApi = {
     // ==================== PUBLIC ====================
     // Lấy tất cả categories
-    getAllCategories: async (includeChildren: boolean = false) => {
-        const res = await axiosInstance.get(`/categories?includeChildren=${includeChildren}`);
+    getAllCategories: async () => {
+        const res = await axiosInstance.get(`/categories`);
         return res.data;
     },
 
