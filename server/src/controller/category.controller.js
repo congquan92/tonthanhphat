@@ -14,16 +14,7 @@ export const CategoryController = {
         }
     },
 
-    // Lấy các category gốc (không có parent)
-    getRootCategories: async (req, res) => {
-        try {
-            const categories = await CategoryService.getRootCategories();
-            return res.json({ success: true, data: categories });
-        } catch (error) {
-            console.error("Lỗi Controller:", error);
-            return res.status(500).json({ success: false, message: "Lỗi hệ thống" });
-        }
-    },
+
 
     // Lấy navLinks format sẵn cho navbar
     getNavLinks: async (req, res) => {
@@ -36,20 +27,7 @@ export const CategoryController = {
         }
     },
 
-    // Lấy children của một category
-    getCategoryChildren: async (req, res) => {
-        try {
-            const { parentId } = req.params;
-            if (!parentId) {
-                return res.status(400).json({ success: false, message: "parentId là bắt buộc" });
-            }
-            const children = await CategoryService.getCategoryChildren(parentId);
-            return res.json({ success: true, data: children });
-        } catch (error) {
-            console.error("Lỗi Controller:", error);
-            return res.status(500).json({ success: false, message: "Lỗi hệ thống" });
-        }
-    },
+
 
     // ==================== ADMIN ====================
 
@@ -194,30 +172,7 @@ export const CategoryController = {
         }
     },
 
-    // Cập nhật thứ tự category
-    updateCategoryOrder: async (req, res) => {
-        try {
-            const { id } = req.params;
-            const { order } = req.body;
 
-            if (!id || order === undefined) {
-                return res.status(400).json({
-                    success: false,
-                    message: "id và order là bắt buộc",
-                });
-            }
-
-            const category = await CategoryService.updateCategoryOrder(id, order);
-            return res.json({
-                success: true,
-                message: "Cập nhật thứ tự thành công",
-                data: category,
-            });
-        } catch (error) {
-            console.error("Lỗi Controller:", error);
-            return res.status(500).json({ success: false, message: "Lỗi hệ thống" });
-        }
-    },
 
     // Cập nhật thứ tự nhiều categories
     updateCategoriesOrder: async (req, res) => {

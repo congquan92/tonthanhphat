@@ -9,18 +9,6 @@ export const CategoryApi = {
         return res.data;
     },
 
-    // Lấy các category gốc
-    getRootCategories: async () => {
-        const res = await axiosInstance.get("/categories/root");
-        return res.data;
-    },
-
-    // Lấy children của một category
-    getCategoryChildren: async (parentId: string) => {
-        const res = await axiosInstance.get(`/categories/${parentId}/children`);
-        return res.data;
-    },
-
     // Lấy navLinks format sẵn cho navbar
     getNavLinks: async () => {
         const res = await axiosInstance.get("/categories/navlinks");
@@ -49,12 +37,6 @@ export const CategoryApi = {
     // Cập nhật thứ tự nhiều categories
     updateCategoriesOrder: async (categories: { id: string; order: number }[]) => {
         const res = await axiosInstance.patch("/categories/order", { categories });
-        return res.data;
-    },
-
-    // Cập nhật thứ tự 1 category
-    updateCategoryOrder: async (id: string, order: number) => {
-        const res = await axiosInstance.patch(`/categories/${id}/order`, { order });
         return res.data;
     },
 

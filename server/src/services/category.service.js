@@ -30,22 +30,7 @@ export const CategoryService = {
         });
     },
 
-    // Lấy các category gốc (không có parentId)
-    getRootCategories: async () => {
-        return await prisma.category.findMany({
-            where: {
-                isActive: true,
-                parentId: null,
-            },
-            orderBy: [{ order: "asc" }, { createdAt: "desc" }],
-            include: {
-                children: {
-                    where: { isActive: true },
-                    orderBy: [{ order: "asc" }, { createdAt: "desc" }],
-                },
-            },
-        });
-    },
+
 
     // Tạo category mới
     createCategory: async (data) => {
@@ -98,13 +83,7 @@ export const CategoryService = {
         });
     },
 
-    // Cập nhật thứ tự của category
-    updateCategoryOrder: async (id, order) => {
-        return await prisma.category.update({
-            where: { id },
-            data: { order },
-        });
-    },
+
 
     // Cập nhật thứ tự nhiều categories cùng lúc
     updateCategoriesOrder: async (categories) => {
@@ -117,16 +96,7 @@ export const CategoryService = {
         return await prisma.$transaction(updatePromises);
     },
 
-    // Lấy children của một category
-    getCategoryChildren: async (parentId) => {
-        return await prisma.category.findMany({
-            where: {
-                parentId,
-                isActive: true,
-            },
-            orderBy: [{ order: "asc" }, { createdAt: "desc" }],
-        });
-    },
+
 
     // Lấy navLinks format sẵn cho navbar
     getNavLinks: async () => {
