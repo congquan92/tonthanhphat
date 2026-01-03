@@ -11,7 +11,7 @@ interface BannerDialogProps {
     isOpen: boolean;
     onClose: () => void;
     banner: Banner | null;
-    banners: Banner[]; // For order validation
+    banners: Banner[];
     onSuccess: () => void;
 }
 
@@ -152,7 +152,7 @@ export function BannerDialog({ isOpen, onClose, banner, banners, onSuccess }: Ba
                             {uploadingImage && <RefreshCw className="h-4 w-4 animate-spin" />}
                         </div>
                         <p className="text-xs text-slate-500">
-                            💡 Khuyến nghị: Upload ảnh tối thiểu <strong>2560x1440px</strong> để hiển thị sắc nét trên desktop
+                            Khuyến nghị: Upload ảnh tối thiểu <strong>2560x1440px</strong> để hiển thị sắc nét trên desktop
                         </p>
                         <p className="text-xs text-slate-500">Ảnh sẽ được upload khi bạn bấm {banner ? "Cập nhật" : "Tạo banner"}</p>
                     </div>

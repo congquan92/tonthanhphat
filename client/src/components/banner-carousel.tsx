@@ -41,6 +41,14 @@ export default function BannerCarousel({ banners = [], autoplay = true, classNam
         api?.scrollNext();
     }, [api]);
 
+    if (banners.length === 0) {
+        return (
+            <div className={cn("relative w-full aspect-video flex items-center justify-center bg-gray-100 border border-dashed border-gray-300 rounded-lg", className)}>
+                <p className="text-gray-500">Chưa có banner để hiển thị</p>
+            </div>
+        );
+    }
+
     return (
         <div className={cn("relative w-full group", className)}>
             <Carousel
@@ -56,15 +64,7 @@ export default function BannerCarousel({ banners = [], autoplay = true, classNam
                     {banners.map((banner) => (
                         <CarouselItem key={banner.id} className="basis-full">
                             <div className="relative aspect-video md:aspect-21/9 w-full overflow-hidden bg-gray-200">
-                                <Image 
-                                    src={banner.imageUrl} 
-                                    alt={banner.alt} 
-                                    fill 
-                                    className="object-cover" 
-                                    sizes="100vw" 
-                                    quality={95}
-                                    priority 
-                                />
+                                <Image src={banner.imageUrl} alt={banner.alt} fill className="object-cover" sizes="100vw" quality={95} priority />
                             </div>
                         </CarouselItem>
                     ))}
