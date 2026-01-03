@@ -40,23 +40,25 @@ function NavItem({ link }: { link: NavLink }) {
                     </Button>
                 </Link>
 
-                {/* Dropdown Menu */}
+                {/* Dropdown Menu - No gap, use padding-top instead */}
                 {isOpen && (
-                    <div className="absolute left-0 top-full mt-1 w-48 bg-white border border-gray-200 shadow-lg z-50 animate-in fade-in-0 zoom-in-95">
-                        {link.submenu.map((subItem) => {
-                            const isSubActive = pathname === subItem.href;
-                            return (
-                                <Link
-                                    key={subItem.href}
-                                    href={subItem.href}
-                                    className={`block px-4 py-2 text-sm transition-colors ${
-                                        isSubActive ? "bg-gray-900 text-white font-semibold" : "text-gray-700 hover:bg-gray-100"
-                                    }`}
-                                >
-                                    {subItem.label}
-                                </Link>
-                            );
-                        })}
+                    <div className="absolute left-0 top-full pt-1 z-50">
+                        <div className="w-48 bg-white border border-gray-200 shadow-lg animate-in fade-in-0 zoom-in-95">
+                            {link.submenu.map((subItem) => {
+                                const isSubActive = pathname === subItem.href;
+                                return (
+                                    <Link
+                                        key={subItem.href}
+                                        href={subItem.href}
+                                        className={`block px-4 py-2 text-sm transition-colors ${
+                                            isSubActive ? "bg-gray-900 text-white font-semibold" : "text-gray-700 hover:bg-gray-100"
+                                        }`}
+                                    >
+                                        {subItem.label}
+                                    </Link>
+                                );
+                            })}
+                        </div>
                     </div>
                 )}
             </div>
