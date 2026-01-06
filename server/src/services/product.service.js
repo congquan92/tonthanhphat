@@ -15,11 +15,7 @@ export const ProductService = {
 
         // Calculate skip for pagination
         const skip = (page - 1) * pageSize;
-
-        // Get total count
         const total = await prisma.product.count({ where });
-
-        // Get products with pagination
         const products = await prisma.product.findMany({
             where,
             include: {
