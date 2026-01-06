@@ -22,7 +22,7 @@ export default function ProductFet({ products = [], slogan, className }: Product
 
                     <div className="flex items-center justify-between mb-6 pl-4">
                         <h3 className="text-xl md:text-2xl font-bold text-orange-500 uppercase">MỘT SỐ SẢN PHẨM TIÊU BIỂU CHO BẠN THAM KHẢO</h3>
-                        <Link href="/san-pham" className="flex items-center gap-1 text-blue-500 hover:text-blue-600 transition-colors text-sm font-medium">
+                        <Link href="/san-pham" className="flex items-center gap-1 text-blue-500 hover:underline transition-colors text-sm font-medium">
                             Xem thêm
                             <ChevronRight className="h-4 w-4" />
                         </Link>
