@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Package, FileText, Settings, LogOut, ChevronLeft, Menu, ImageUp } from "lucide-react";
+import { Package, FileText, Settings, LogOut, ChevronLeft, Menu, ImageUp, BookMarked } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -22,7 +22,7 @@ const menuItems = [
     {
         title: "Category",
         href: "/admin/categories",
-        icon: Menu,
+        icon: BookMarked,
     },
     {
         title: "Bài viết",
