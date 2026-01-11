@@ -64,7 +64,7 @@ export default function BannerCarousel({ banners = [], autoplay = true, classNam
                     {banners.map((banner) => (
                         <CarouselItem key={banner.id} className="basis-full">
                             <div className="relative aspect-video md:aspect-21/9 w-full overflow-hidden bg-gray-200">
-                                <Image src={banner.imageUrl} alt={banner.alt} fill className="object-cover" sizes="100vw" quality={95} priority />
+                                <Image src={banner.imageUrl} alt={banner.alt} fill className="object-cover object-top" sizes="100vw" quality={95} priority />
                             </div>
                         </CarouselItem>
                     ))}

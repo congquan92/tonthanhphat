@@ -81,6 +81,7 @@ export function BannerDialog({ isOpen, onClose, banner, banners, onSuccess }: Ba
     };
 
     const handleSubmit = async () => {
+        if (uploadingImage) return;
         if (!selectedFile && !formData.imageUrl) {
             toast.error("Vui lòng chọn ảnh");
             return;
@@ -90,41 +91,54 @@ export function BannerDialog({ isOpen, onClose, banner, banners, onSuccess }: Ba
             return;
         }
 
+        let toastId: string | number | undefined;
+
         try {
             setUploadingImage(true);
-
-            // Upload image first if new file selected
             let imageUrl = formData.imageUrl;
             let publicId = formData.publicId;
+
+            // Upload image if there's a new file
             if (selectedFile) {
-                setUploadProgress("Đang upload ảnh lên Cloudinary...");
+                toastId = toast.loading("Đang upload ảnh...");
+                setUploadProgress("Đang upload ảnh...");
+
                 const uploadResult = await BannerApi.uploadImageFromFile(selectedFile);
                 imageUrl = uploadResult.data.url;
                 publicId = uploadResult.data.publicId;
-                setUploadProgress(banner ? "Upload ảnh thành công, đang cập nhật banner..." : "Upload ảnh thành công, đang tạo banner...");
+
+                toast.success("Upload ảnh thành công!", { id: toastId });
+                setUploadProgress(banner ? "Đang cập nhật banner..." : "Đang tạo banner...");
             }
 
             // Create or update banner
+            if (!selectedFile) {
+                toastId = toast.loading(banner ? "Đang cập nhật banner..." : "Đang tạo banner...");
+            } else {
+                toastId = toast.loading(banner ? "Đang cập nhật banner..." : "Đang tạo banner...");
+            }
+
             if (banner) {
                 await BannerApi.updateBanner(banner.id, {
                     ...formData,
                     imageUrl,
                     publicId,
                 });
-                toast.success("Cập nhật banner thành công");
+                toast.success("Cập nhật banner thành công!", { id: toastId });
             } else {
                 await BannerApi.createBanner({
                     ...formData,
                     imageUrl,
                     publicId,
                 });
-                toast.success("Tạo banner thành công");
+                toast.success("Tạo banner mới thành công!", { id: toastId });
             }
 
             onSuccess();
             onClose();
         } catch (error: any) {
-            toast.error(error.response?.data?.message || (banner ? "Không thể cập nhật banner" : "Không thể tạo banner"));
+            const errorMessage = error.response?.data?.message || (banner ? "Không thể cập nhật banner" : "Không thể tạo banner");
+            toast.error(errorMessage, { id: toastId });
         } finally {
             setUploadingImage(false);
             setUploadProgress("");
@@ -163,19 +177,6 @@ export function BannerDialog({ isOpen, onClose, banner, banners, onSuccess }: Ba
                         <Input id="alt" value={formData.alt} onChange={(e) => setFormData({ ...formData, alt: e.target.value })} placeholder="Mô tả banner..." disabled={uploadingImage} />
                     </div>
 
-                    {/* Order */}
-                    <div className="space-y-2">
-                        <Label htmlFor="order">Thứ tự hiển thị* (unique)</Label>
-                        <Input id="order" type="number" min="1" value={formData.order} onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) || 1 })} disabled={uploadingImage} />
-                        <p className="text-xs text-slate-500">
-                            Order hiện có:{" "}
-                            {banners
-                                .filter((b) => b.id !== banner?.id)
-                                .map((b) => b.order)
-                                .join(", ") || "Không có"}
-                        </p>
-                    </div>
-
                     {/* Active */}
                     <div className="flex items-center gap-2">
                         <input type="checkbox" id="active" checked={formData.isActive} onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })} className="h-4 w-4" disabled={uploadingImage} />
@@ -188,11 +189,11 @@ export function BannerDialog({ isOpen, onClose, banner, banners, onSuccess }: Ba
                     <AlertDialogCancel disabled={uploadingImage} className="rounded-xl">
                         Hủy
                     </AlertDialogCancel>
-                    <AlertDialogAction disabled={uploadingImage} onClick={handleSubmit} className="rounded-xl bg-blue-500 text-white hover:bg-blue-600">
+                    <AlertDialogAction onClick={handleSubmit} className="rounded-xl bg-blue-500 text-white hover:bg-blue-600">
                         {uploadingImage ? (
                             <>
                                 <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
-                                {uploadProgress || "Đang xử lý..."}
+                                {uploadProgress}
                             </>
                         ) : (
                             <>{banner ? "Cập nhật" : "Tạo banner"}</>

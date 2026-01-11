@@ -19,13 +19,15 @@ export default function BannersPage() {
 
     // Fetch banners
     const fetchBanners = async () => {
+        const toastId = toast.loading("Đang tải danh sách banner...");
         try {
             setIsLoading(true);
             const bannersRes = await BannerApi.getAllBannersAdmin();
             setBanners(bannersRes.data || []);
+            toast.success("Tải danh sách thành công!", { id: toastId });
         } catch (error) {
             console.error("Failed to fetch banners:", error);
-            toast.error("Không thể tải dữ liệu");
+            toast.error("Không thể tải danh sách banner", { id: toastId });
         } finally {
             setIsLoading(false);
         }
@@ -37,25 +39,29 @@ export default function BannersPage() {
 
     // Toggle active status
     const handleToggleActive = async (banner: Banner) => {
+        const toastId = toast.loading(banner.isActive ? "Đang ẩn banner..." : "Đang hiển thị banner...");
         try {
             await BannerApi.updateBanner(banner.id, { isActive: !banner.isActive });
             setBanners((prev) => prev.map((b) => (b.id === banner.id ? { ...b, isActive: !b.isActive } : b)));
-            toast.success(banner.isActive ? "Đã ẩn banner" : "Đã hiển thị banner");
+            toast.success(banner.isActive ? "Đã ẩn banner thành công!" : "Đã hiển thị banner thành công!", { id: toastId });
         } catch (error) {
-            toast.error("Không thể cập nhật trạng thái");
+            console.error("Failed to update banner status:", error);
+            toast.error("Không thể cập nhật trạng thái banner", { id: toastId });
         }
     };
 
     // Delete banner
     const handleDelete = async () => {
         if (!deleteBanner) return;
+        const toastId = toast.loading("Đang xóa banner...");
         try {
             await BannerApi.deleteBanner(deleteBanner.id);
             setBanners((prev) => prev.filter((b) => b.id !== deleteBanner.id));
-            toast.success("Đã xóa banner");
+            toast.success("Xóa banner thành công!", { id: toastId });
             setDeleteBanner(null);
         } catch (error) {
-            toast.error("Không thể xóa banner");
+            console.error("Failed to delete banner:", error);
+            toast.error("Không thể xóa banner", { id: toastId });
         }
     };
 
