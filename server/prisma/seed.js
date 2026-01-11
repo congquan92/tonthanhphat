@@ -69,55 +69,36 @@ async function main() {
         console.log("Contact info already exists.");
     }
 
-    // Create Categories
+    // Create Product Categories (flat structure, no parent/child)
     let tonKemCategory, tonMauCategory, tonXopCategory, tongThepCategory;
     const existingCategories = await prisma.category.findFirst();
 
     if (!existingCategories) {
-        // Tạo category cha: Sản Phẩm
-        const sanPham = await prisma.category.create({
-            data: {
-                name: "Sản Phẩm",
-                slug: "san-pham",
-                order: 1,
-                isActive: true,
-            },
-        });
-
-        // Tạo category con cho Sản Phẩm
+        // Create product categories directly (no parent category needed)
         tonKemCategory = await prisma.category.create({
-            data: { name: "Tôn Kẽm", slug: "ton-kem", parentId: sanPham.id, order: 1, isActive: true },
+            data: { name: "Tôn Kẽm", slug: "ton-kem", order: 1, isActive: true },
         });
         tonMauCategory = await prisma.category.create({
-            data: { name: "Tôn Màu", slug: "ton-mau", parentId: sanPham.id, order: 2, isActive: true },
+            data: { name: "Tôn Màu", slug: "ton-mau", order: 2, isActive: true },
         });
         tonXopCategory = await prisma.category.create({
-            data: { name: "Tôn Xốp PU", slug: "ton-xop-pu", parentId: sanPham.id, order: 3, isActive: true },
+            data: { name: "Tôn Xốp PU", slug: "ton-xop-pu", order: 3, isActive: true },
         });
         tongThepCategory = await prisma.category.create({
-            data: { name: "Tôn Lạnh", slug: "ton-lanh", parentId: sanPham.id, order: 4, isActive: true },
+            data: { name: "Tôn Lạnh", slug: "ton-lanh", order: 4, isActive: true },
         });
 
+        // Create additional product categories
         await prisma.category.createMany({
             data: [
-                { name: "Tôn 5 Sóng", slug: "ton-5-song", parentId: sanPham.id, order: 5, isActive: true },
-                { name: "Tôn 11 Sóng", slug: "ton-11-song", parentId: sanPham.id, order: 6, isActive: true },
+                { name: "Tôn 5 Sóng", slug: "ton-5-song", order: 5, isActive: true },
+                { name: "Tôn 11 Sóng", slug: "ton-11-song", order: 6, isActive: true },
             ],
         });
 
-        // Tạo các category khác
-        await prisma.category.createMany({
-            data: [
-                { name: "Trang Chủ", slug: "", order: 0, isActive: true },
-                { name: "Giới Thiệu", slug: "gioi-thieu", order: 2, isActive: true },
-                { name: "Tin Tức", slug: "tin-tuc", order: 3, isActive: true },
-                { name: "Liên Hệ", slug: "lien-he", order: 4, isActive: true },
-            ],
-        });
-
-        console.log("Categories created successfully.");
+        console.log("Product categories created successfully.");
     } else {
-        // Lấy categories đã tồn tại
+        // Get existing categories
         tonKemCategory = await prisma.category.findUnique({ where: { slug: "ton-kem" } });
         tonMauCategory = await prisma.category.findUnique({ where: { slug: "ton-mau" } });
         tonXopCategory = await prisma.category.findUnique({ where: { slug: "ton-xop-pu" } });
@@ -125,10 +106,9 @@ async function main() {
         console.log("Categories already exist.");
     }
 
-    // Create Sample Products
+    // Create Sample Products 
     const existingProducts = await prisma.product.findFirst();
     if (!existingProducts) {
-        // Sample images from placeholder (sẽ thay bằng Cloudinary URLs thực tế)
         const sampleProducts = [
             // Tôn Kẽm Products
             {

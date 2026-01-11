@@ -5,9 +5,23 @@ import { ContactInfo } from "@/components/type";
 import { NavbarClient } from "@/components/navbar-client";
 
 export default async function Navbar() {
-    const [contactRes, navLinksRes] = await Promise.all([ContactInfoApi.getContactInfo(), CategoryApi.getNavLinks()]);
+    const [contactRes, productCategoriesRes] = await Promise.all([ContactInfoApi.getContactInfo(), CategoryApi.getNavLinks()]);
     const contactInfo: ContactInfo = contactRes.data;
-    const navLinks = navLinksRes.data;
+    const productCategories = productCategoriesRes.data;
+    
+    // Create static navigation structure with dynamic product categories
+    const navLinks = [
+        { href: "/", label: "Trang Chủ" },
+        { 
+            href: "/san-pham", 
+            label: "Sản Phẩm",
+            submenu: productCategories // Dynamic categories from database
+        },
+        { href: "/gioi-thieu", label: "Giới Thiệu" },
+        { href: "/tin-tuc", label: "Tin Tức" },
+        { href: "/lien-he", label: "Liên Hệ" },
+    ];
+
     const urlZalo = contactInfo.socialLinks.find((l) => l.platform.toLocaleLowerCase() === "zalo")?.url;
     const phoneLink = `tel:${contactInfo.companyPhone[0]?.replace(/\s/g, "")}`;
     return (

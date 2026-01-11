@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Save, Upload, X, Plus, Trash2, RefreshCw, Image as ImageIcon } from "lucide-react";
+import { ArrowLeft, Save, Upload, X, Plus, Trash2, RefreshCw, Image as ImageIcon, FolderPlus } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,11 +13,13 @@ import { Category } from "@/api/type";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { QuickCategoryDialog } from "../_components";
 
 export default function NewProductPage() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [categories, setCategories] = useState<Category[]>([]);
+    const [isCategoryDialogOpen, setIsCategoryDialogOpen] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const [formData, setFormData] = useState<CreateProductInput>({
@@ -36,15 +38,16 @@ export default function NewProductPage() {
     });
 
     // Fetch categories
+    const fetchCategories = async () => {
+        try {
+            const res = await CategoryApi.getAllCategoriesAdmin();
+            setCategories(res.data || []);
+        } catch (error) {
+            console.error("Failed to fetch categories:", error);
+        }
+    };
+
     useEffect(() => {
-        const fetchCategories = async () => {
-            try {
-                const res = await CategoryApi.getAllCategoriesAdmin();
-                setCategories(res.data || []);
-            } catch (error) {
-                console.error("Failed to fetch categories:", error);
-            }
-        };
         fetchCategories();
     }, []);
 
@@ -174,11 +177,7 @@ export default function NewProductPage() {
         }
     };
 
-    // Get product categories - only categories that have a parentId (are children/product categories)
-    const productCategories = categories
-        .filter((cat) => cat.parentId) // Chỉ lấy categories con (có parentId)
-        .map((cat) => ({ id: cat.id, name: cat.name }))
-        .sort((a, b) => a.name.localeCompare(b.name, "vi"));
+
 
     return (
         <div className="space-y-6">
@@ -327,7 +326,19 @@ export default function NewProductPage() {
                         {/* Category */}
                         <Card className="rounded-2xl border-0 bg-white shadow-lg dark:bg-slate-800">
                             <CardHeader>
-                                <CardTitle>Danh mục</CardTitle>
+                                <div className="flex items-center justify-between">
+                                    <CardTitle>Danh mục</CardTitle>
+                                    <Button
+                                        type="button"
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={() => setIsCategoryDialogOpen(true)}
+                                        className="text-blue-600 hover:text-blue-700"
+                                    >
+                                        <FolderPlus className="mr-1 h-4 w-4" />
+                                        Tạo mới
+                                    </Button>
+                                </div>
                             </CardHeader>
                             <CardContent>
                                 <select
@@ -336,11 +347,14 @@ export default function NewProductPage() {
                                     className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-slate-700 dark:bg-slate-900"
                                 >
                                     <option value="">Chọn danh mục</option>
-                                    {productCategories.map((cat) => (
-                                        <option key={cat.id} value={cat.id}>
-                                            {cat.name}
-                                        </option>
-                                    ))}
+                                    {categories
+                                        .filter((cat) => cat.isActive)
+                                        .sort((a, b) => a.name.localeCompare(b.name, "vi"))
+                                        .map((cat) => (
+                                            <option key={cat.id} value={cat.id}>
+                                                {cat.name}
+                                            </option>
+                                        ))}
                                 </select>
                             </CardContent>
                         </Card>
@@ -357,6 +371,13 @@ export default function NewProductPage() {
                     </div>
                 </div>
             </form>
+
+            {/* Quick Category Dialog */}
+            <QuickCategoryDialog
+                isOpen={isCategoryDialogOpen}
+                onClose={() => setIsCategoryDialogOpen(false)}
+                onCategoryCreated={fetchCategories}
+            />
         </div>
     );
 }
