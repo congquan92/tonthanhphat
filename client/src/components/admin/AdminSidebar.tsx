@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Package, FileText, Settings, FolderOpen, LogOut, ChevronLeft, Menu, ImageUp } from "lucide-react";
+import { Package, FileText, Settings, LogOut, ChevronLeft, Menu, ImageUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -18,11 +18,6 @@ const menuItems = [
         title: "Sản phẩm",
         href: "/admin/products",
         icon: Package,
-    },
-    {
-        title: "Danh mục",
-        href: "/admin/categories",
-        icon: FolderOpen,
     },
     {
         title: "Bài viết",

@@ -2,17 +2,6 @@ import { CategoryService } from "../services/category.service.js";
 
 export const CategoryController = {
     // ==================== PUBLIC ====================
-    // Lấy tất cả categories
-    getAllCategories: async (req, res) => {
-        try {
-            const includeChildren = req.query.includeChildren === "true";
-            const categories = await CategoryService.getAllCategories(includeChildren);
-            return res.json({ success: true, data: categories });
-        } catch (error) {
-            console.error("Lỗi Controller:", error);
-            return res.status(500).json({ success: false, message: "Lỗi hệ thống" });
-        }
-    },
 
     // Lấy navLinks format sẵn cho navbar
     getNavLinks: async (req, res) => {
@@ -41,7 +30,7 @@ export const CategoryController = {
     // Tạo category mới
     createCategory: async (req, res) => {
         try {
-            const { name, slug, description, parentId, order, isActive } = req.body;
+            const { name, slug, parentId, order, isActive } = req.body;
 
             if (!name || !slug) {
                 return res.status(400).json({
@@ -53,7 +42,6 @@ export const CategoryController = {
             const category = await CategoryService.createCategory({
                 name,
                 slug,
-                description,
                 parentId,
                 order,
                 isActive,
@@ -89,7 +77,6 @@ export const CategoryController = {
             const category = await CategoryService.updateCategory(id, {
                 name,
                 slug,
-                description,
                 parentId,
                 order,
                 isActive,
@@ -168,26 +155,5 @@ export const CategoryController = {
         }
     },
 
-    // Cập nhật thứ tự nhiều categories
-    updateCategoriesOrder: async (req, res) => {
-        try {
-            const { categories } = req.body;
 
-            if (!categories || !Array.isArray(categories)) {
-                return res.status(400).json({
-                    success: false,
-                    message: "categories phải là một mảng",
-                });
-            }
-
-            await CategoryService.updateCategoriesOrder(categories);
-            return res.json({
-                success: true,
-                message: "Cập nhật thứ tự các danh mục thành công",
-            });
-        } catch (error) {
-            console.error("Lỗi Controller:", error);
-            return res.status(500).json({ success: false, message: "Lỗi hệ thống" });
-        }
-    },
 };

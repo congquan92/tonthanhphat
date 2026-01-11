@@ -8,18 +8,19 @@ import ProductCarousel from "@/app/(client)/san-pham/_components/product-carouse
 
 interface ProductDetailPageProps {
     params: Promise<{
-        slug: string;
+        categorySlug: string;
+        productSlug: string;
     }>;
 }
 
 export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
-    const { slug } = await params;
+    const { categorySlug, productSlug } = await params;
     let productData;
     let contactInfo;
     let sameCategoryProducts;
 
     try {
-        const [productRes, contactRes] = await Promise.all([ProductApi.getProductBySlug(slug), ContactInfoApi.getContactInfo()]);
+        const [productRes, contactRes] = await Promise.all([ProductApi.getProductBySlug(productSlug), ContactInfoApi.getContactInfo()]);
         productData = productRes.data;
         contactInfo = contactRes.data;
         sameCategoryProducts = productRes.data.relatedProducts;
@@ -33,7 +34,6 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 
     const { name, shortDesc, description, thumbnail, images, specs, category } = productData;
 
-    // Get first phone and email from contact info
     const phone = Array.isArray(contactInfo?.companyPhone) ? contactInfo.companyPhone[0] : "0901 234 567";
     const email = contactInfo?.companyEmail || "info@tonthanhphat.vn";
 
@@ -53,7 +53,9 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
                         {category && (
                             <>
                                 <span>/</span>
-                                <span>{category.name}</span>
+                                <Link href={`/san-pham/${category.slug}`} className="hover:text-gray-900">
+                                    {category.name}
+                                </Link>
                             </>
                         )}
                         <span>/</span>
@@ -103,22 +105,6 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
                                 </a>
                             </div>
                         </div>
-
-                        {/* Social Share
-                        <div>
-                            <p className="text-sm text-gray-600 mb-2">Chia sẻ:</p>
-                            <div className="flex gap-2">
-                                <button className="w-8 h-8 bg-gray-200 hover:bg-gray-300 flex items-center justify-center transition">
-                                    <span className="text-gray-700 text-xs">📧</span>
-                                </button>
-                                <button className="w-8 h-8 bg-gray-200 hover:bg-gray-300 flex items-center justify-center transition">
-                                    <span className="text-gray-700 text-xs">FB</span>
-                                </button>
-                                <button className="w-8 h-8 bg-gray-200 hover:bg-gray-300 flex items-center justify-center transition">
-                                    <span className="text-gray-700 text-xs">TW</span>
-                                </button>
-                            </div>
-                        </div> */}
                     </div>
                 </div>
 
@@ -138,7 +124,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
                 </div>
 
                 {/* Related Products */}
-                <ProductCarousel title="Sản phẩm cùng loại" products={sameCategoryProducts} itemsPerPage={4} />
+                <ProductCarousel title="Sản phẩm cùng loại" products={sameCategoryProducts} itemsPerPage={4} categorySlug={categorySlug} />
             </div>
         </div>
     );
