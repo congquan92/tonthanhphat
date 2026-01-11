@@ -8,7 +8,7 @@ export const AuthController = {
             const tokens = await AuthService.login(email, password);
             res.cookie("accessToken", tokens.accessToken, {
                 ...Helper.cookieOptions(),
-                maxAge: 15 * 60 * 1000, // 15 phút (khớp với expiresIn của JWT)
+                maxAge: 15 * 60 * 1000, // 15 phút
             });
             res.cookie("refreshToken", tokens.refreshToken, {
                 ...Helper.cookieOptions(),

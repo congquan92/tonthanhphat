@@ -14,8 +14,6 @@ export const CategoryController = {
         }
     },
 
-
-
     // Lấy navLinks format sẵn cho navbar
     getNavLinks: async (req, res) => {
         try {
@@ -26,8 +24,6 @@ export const CategoryController = {
             return res.status(500).json({ success: false, message: "Lỗi hệ thống" });
         }
     },
-
-
 
     // ==================== ADMIN ====================
 
@@ -171,8 +167,6 @@ export const CategoryController = {
             return res.status(500).json({ success: false, message: "Lỗi hệ thống" });
         }
     },
-
-
 
     // Cập nhật thứ tự nhiều categories
     updateCategoriesOrder: async (req, res) => {

@@ -30,8 +30,6 @@ export const CategoryService = {
         });
     },
 
-
-
     // Tạo category mới
     createCategory: async (data) => {
         return await prisma.category.create({
@@ -83,8 +81,6 @@ export const CategoryService = {
         });
     },
 
-
-
     // Cập nhật thứ tự nhiều categories cùng lúc
     updateCategoriesOrder: async (categories) => {
         const updatePromises = categories.map((cat) =>
@@ -95,8 +91,6 @@ export const CategoryService = {
         );
         return await prisma.$transaction(updatePromises);
     },
-
-
 
     // Lấy navLinks format sẵn cho navbar
     getNavLinks: async () => {
