@@ -25,14 +25,14 @@ const menuItems = [
         icon: FileText,
     },
     {
-        title: "Cài đặt",
-        href: "/admin/settings",
-        icon: Settings,
-    },
-    {
         title: "Banner",
         href: "/admin/banners",
         icon: ImageUp,
+    },
+    {
+        title: "Cài đặt",
+        href: "/admin/settings",
+        icon: Settings,
     },
 ];
 

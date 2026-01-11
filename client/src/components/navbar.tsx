@@ -8,14 +8,13 @@ export default async function Navbar() {
     const [contactRes, productCategoriesRes] = await Promise.all([ContactInfoApi.getContactInfo(), CategoryApi.getNavLinks()]);
     const contactInfo: ContactInfo = contactRes.data;
     const productCategories = productCategoriesRes.data;
-    
-    // Create static navigation structure with dynamic product categories
+
     const navLinks = [
         { href: "/", label: "Trang Chủ" },
-        { 
-            href: "/san-pham", 
+        {
+            href: "/san-pham",
             label: "Sản Phẩm",
-            submenu: productCategories // Dynamic categories from database
+            submenu: productCategories, //  categories from database
         },
         { href: "/gioi-thieu", label: "Giới Thiệu" },
         { href: "/tin-tuc", label: "Tin Tức" },
