@@ -54,8 +54,14 @@ export const ProductController = {
 
     getAllProductsAdmin: async (req, res) => {
         try {
-            const products = await ProductService.getAllProductsAdmin();
-            return res.json({ success: true, data: products });
+            const { page, pageSize, search, categoryId } = req.query;
+            const result = await ProductService.getAllProductsAdmin(
+                page ? parseInt(page) : 1,
+                pageSize ? parseInt(pageSize) : 20,
+                search || null,
+                categoryId || null
+            );
+            return res.json({ success: true, data: result.products, pagination: result.pagination });
         } catch (error) {
             console.error("getAllProductsAdmin error:", error);
             return res.status(500).json({ success: false, message: "Lỗi hệ thống" });

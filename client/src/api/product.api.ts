@@ -76,8 +76,13 @@ export const ProductApi = {
     },
 
     // ==================== ADMIN ====================
-    getAllProductsAdmin: async () => {
-        const res = await axiosInstance.get("/products/admin/all");
+    getAllProductsAdmin: async (page?: number, pageSize?: number, search?: string, categoryId?: string) => {
+        const params = new URLSearchParams();
+        if (page) params.append("page", page.toString());
+        if (pageSize) params.append("pageSize", pageSize.toString());
+        if (search) params.append("search", search);
+        if (categoryId) params.append("categoryId", categoryId);
+        const res = await axiosInstance.get(`/products/admin/all?${params.toString()}`);
         return res.data;
     },
 

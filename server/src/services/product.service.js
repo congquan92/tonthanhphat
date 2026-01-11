@@ -81,15 +81,47 @@ export const ProductService = {
     // ==================== ADMIN ====================
 
     //Lấy tất cả sản phẩm (admin - bao gồm cả inactive)
-    getAllProductsAdmin: async () => {
-        return prisma.product.findMany({
+    getAllProductsAdmin: async (page = 1, pageSize = 20, search = null, categoryId = null) => {
+        const where = {};
+
+        // Search filter
+        if (search) {
+            where.OR = [
+                { name: { contains: search, mode: "insensitive" } },
+                { slug: { contains: search, mode: "insensitive" } },
+            ];
+        }
+
+        // Category filter
+        if (categoryId) {
+            where.categoryId = categoryId;
+        }
+
+        // Calculate skip for pagination
+        const skip = (page - 1) * pageSize;
+        const total = await prisma.product.count({ where });
+        
+        const products = await prisma.product.findMany({
+            where,
             include: {
                 category: {
                     select: { id: true, name: true, slug: true },
                 },
             },
             orderBy: [{ order: "asc" }, { createdAt: "desc" }],
+            skip,
+            take: pageSize,
         });
+
+        return {
+            products,
+            pagination: {
+                page,
+                pageSize,
+                total,
+                totalPages: Math.ceil(total / pageSize),
+            },
+        };
     },
 
     // Lấy sản phẩm theo ID

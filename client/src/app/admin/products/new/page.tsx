@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Save, Upload, X, Plus, Trash2, RefreshCw, Image as ImageIcon, FolderPlus } from "lucide-react";
+import { ArrowLeft, Save, Upload, X, Plus, Trash2, RefreshCw, Image as ImageIcon, FolderPlus, Eye } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,13 +13,15 @@ import { Category } from "@/api/type";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { QuickCategoryDialog } from "../_components";
+import { QuickCategoryDialog, ProductPreviewDialog } from "../_components";
+import { RichTextEditor } from "@/components/ui/rich-text-editor";
 
 export default function NewProductPage() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [categories, setCategories] = useState<Category[]>([]);
     const [isCategoryDialogOpen, setIsCategoryDialogOpen] = useState(false);
+    const [isPreviewOpen, setIsPreviewOpen] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const [formData, setFormData] = useState<CreateProductInput>({
@@ -218,13 +220,11 @@ export default function NewProductPage() {
                                 </div>
                                 <div>
                                     <Label htmlFor="description">Mô tả chi tiết</Label>
-                                    <textarea
-                                        id="description"
-                                        value={formData.description}
-                                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                        placeholder="Mô tả chi tiết sản phẩm (hỗ trợ HTML)..."
-                                        rows={6}
-                                        className="mt-1.5 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-slate-700 dark:bg-slate-900"
+                                    <RichTextEditor
+                                        value={formData.description || ""}
+                                        onChange={(value) => setFormData({ ...formData, description: value })}
+                                        placeholder="Nhập mô tả chi tiết sản phẩm..."
+                                        className="mt-1.5"
                                     />
                                 </div>
                             </CardContent>
@@ -316,6 +316,15 @@ export default function NewProductPage() {
                                         <span className={cn("h-5 w-5 transform rounded-full bg-white shadow-md transition-transform", formData.isFeatured ? "translate-x-5" : "translate-x-0.5")} />
                                     </button>
                                 </div>
+                                <Button 
+                                    type="button" 
+                                    onClick={() => setIsPreviewOpen(true)} 
+                                    variant="outline" 
+                                    className="w-full rounded-xl mb-3"
+                                >
+                                    <Eye className="mr-2 h-4 w-4" />
+                                    Xem trước
+                                </Button>
                                 <Button type="submit" disabled={isLoading} className="w-full rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 text-white">
                                     {isLoading ? <RefreshCw className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
                                     Tạo sản phẩm
@@ -377,6 +386,21 @@ export default function NewProductPage() {
                 isOpen={isCategoryDialogOpen}
                 onClose={() => setIsCategoryDialogOpen(false)}
                 onCategoryCreated={fetchCategories}
+            />
+
+            {/* Preview Dialog */}
+            <ProductPreviewDialog
+                isOpen={isPreviewOpen}
+                onClose={() => setIsPreviewOpen(false)}
+                productData={{
+                    name: formData.name || "Tên sản phẩm",
+                    shortDesc: formData.shortDesc,
+                    description: formData.description,
+                    thumbnail: formData.thumbnail,
+                    images: formData.images,
+                    specs: formData.specs,
+                    category: categories.find(c => c.id === formData.categoryId),
+                }}
             />
         </div>
     );
