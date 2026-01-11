@@ -23,7 +23,7 @@ export const ProductService = {
                     select: { id: true, name: true, slug: true },
                 },
             },
-            orderBy: { order: "asc" },
+            orderBy: { createdAt: "desc" },
             skip,
             take: pageSize,
         });
@@ -48,7 +48,7 @@ export const ProductService = {
                     select: { id: true, name: true, slug: true },
                 },
             },
-            orderBy: { order: "asc" },
+            orderBy: { createdAt: "desc" },
             take: limit,
         });
     },
@@ -74,7 +74,7 @@ export const ProductService = {
                 id: { not: productId },
             },
             take: limit,
-            orderBy: { order: "asc" },
+            orderBy: { createdAt: "desc" },
         });
     },
 
@@ -108,7 +108,7 @@ export const ProductService = {
                     select: { id: true, name: true, slug: true },
                 },
             },
-            orderBy: [{ order: "asc" }, { createdAt: "desc" }],
+            orderBy: { createdAt: "desc" },
             skip,
             take: pageSize,
         });
@@ -149,7 +149,6 @@ export const ProductService = {
                 imagePublicIds: data.imagePublicIds, // Store Cloudinary public IDs
                 specs: data.specs,
                 categoryId: data.categoryId,
-                order: data.order || 0,
                 isActive: data.isActive ?? true,
                 isFeatured: data.isFeatured ?? false,
             },
@@ -175,7 +174,6 @@ export const ProductService = {
                 ...(data.imagePublicIds !== undefined && { imagePublicIds: data.imagePublicIds }), // Update public IDs
                 ...(data.specs !== undefined && { specs: data.specs }),
                 ...(data.categoryId !== undefined && { categoryId: data.categoryId }),
-                ...(data.order !== undefined && { order: data.order }),
                 ...(data.isActive !== undefined && { isActive: data.isActive }),
                 ...(data.isFeatured !== undefined && { isFeatured: data.isFeatured }),
             },

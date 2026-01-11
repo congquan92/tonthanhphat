@@ -34,7 +34,6 @@ export default function NewProductPage() {
         imagePublicIds: [], // Track Cloudinary public IDs
         specs: [],
         categoryId: "",
-        order: 0,
         isActive: true,
         isFeatured: false,
     });
@@ -365,16 +364,6 @@ export default function NewProductPage() {
                                             </option>
                                         ))}
                                 </select>
-                            </CardContent>
-                        </Card>
-
-                        {/* Order */}
-                        <Card className="rounded-2xl border-0 bg-white shadow-lg dark:bg-slate-800">
-                            <CardHeader>
-                                <CardTitle>Thứ tự hiển thị</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <Input type="number" value={formData.order} onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) || 0 })} min={0} />
                             </CardContent>
                         </Card>
                     </div>

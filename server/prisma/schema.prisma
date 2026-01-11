@@ -69,7 +69,6 @@ model Product {
   specs          Json? // Thông số kỹ thuật [{key, value}]
   categoryId     String?
   category       Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  order          Int       @default(0)
   isActive       Boolean   @default(true)
   isFeatured     Boolean   @default(false) // Sản phẩm nổi bật cho homepage
   createdAt      DateTime  @default(now())

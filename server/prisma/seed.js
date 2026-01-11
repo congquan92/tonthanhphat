@@ -34,15 +34,15 @@ async function main() {
                 companyShortName: "TTP",
                 companyTagline: "Chuyên Sản Xuất & Phân Phối Tôn Thép",
                 companySlogan: "Chất lượng hàng đầu - Giá cả cạnh tranh",
-                companyDescription: ` CÔNG TY TNHH SẢN XUẤT THƯƠNG MẠI DỊCH VỤ TÔN THÉP THÀNH PHÁT
-                Công Ty Tôn Thép Thành Phát xin trân trọng giới thiệu đến Quý khách hàng:
-                Công ty được thành lập ngày 28/02/2020, hoạt động trong lĩnh vực sản xuất – thương mại – phân phối tôn thép. Trải qua quá trình hình thành và phát triển, Tôn Thép Thành Phát từng bước khẳng định vị thế là đơn vị cung cấp tôn thép uy tín, đáp ứng đa dạng nhu cầu của thị trường với chất lượng sản phẩm ổn định, giá cả hợp lý và dịch vụ chuyên nghiệp.
-                Với phương châm lấy uy tín – chất lượng – sự minh bạch làm nền tảng, Công Ty Tôn Thép Thành Phát luôn chú trọng hoàn thiện quy trình sản xuất, kinh doanh và phân phối, nhằm mang đến cho khách hàng những sản phẩm đạt tiêu chuẩn, rõ ràng về nguồn gốc, chủng loại và giá thành.
-                Trong giai đoạn đầu hoạt động, do còn hạn chế về kinh nghiệm và nguồn lực, công ty không tránh khỏi những thiếu sót ảnh hưởng đến sự hài lòng của Quý khách hàng. Chúng tôi xin chân thành ghi nhận và cam kết không ngừng cải tiến, nâng cao chất lượng sản phẩm cũng như phong cách phục vụ, đặc biệt từ năm 2024 trở đi, với mục tiêu phát triển bền vững và chuyên nghiệp hơn.
-                Sự tin tưởng và đồng hành của Quý khách hàng chính là động lực và niềm vinh hạnh đối với Tôn Thép Thành Phát trong suốt quá trình phát triển.
-                Kính chúc Quý khách hàng sức khỏe, thành công và thịnh vượng.
-                Chúc cho mối quan hệ hợp tác giữa Quý khách hàng và Công Ty Tôn Thép Thành Phát ngày càng bền chặt.
-                Trân trọng cảm ơn!`.trim(),
+                companyDescription: `CÔNG TY TNHH SẢN XUẤT THƯƠNG MẠI DỊCH VỤ TÔN THÉP THÀNH PHÁT 
+Công Ty Tôn Thép Thành Phát xin trân trọng giới thiệu đến Quý khách hàng: 
+Công ty được thành lập ngày 28/02/2020, hoạt động trong lĩnh vực sản xuất – thương mại – phân phối tôn thép. Trải qua quá trình hình thành và phát triển, Tôn Thép Thành Phát từng bước khẳng định vị thế là đơn vị cung cấp tôn thép uy tín, đáp ứng đa dạng nhu cầu của thị trường với chất lượng sản phẩm ổn định, giá cả hợp lý và dịch vụ chuyên nghiệp. 
+Với phương châm lấy uy tín – chất lượng – sự minh bạch làm nền tảng, Công Ty Tôn Thép Thành Phát luôn chú trọng hoàn thiện quy trình sản xuất, kinh doanh và phân phối, nhằm mang đến cho khách hàng những sản phẩm đạt tiêu chuẩn, rõ ràng về nguồn gốc, chủng loại và giá thành. 
+Trong giai đoạn đầu hoạt động, do còn hạn chế về kinh nghiệm và nguồn lực, công ty không tránh khỏi những thiếu sót ảnh hưởng đến sự hài lòng của Quý khách hàng. Chúng tôi xin chân thành ghi nhận và cam kết không ngừng cải tiến, nâng cao chất lượng sản phẩm cũng như phong cách phục vụ, đặc biệt từ năm 2024 trở đi, với mục tiêu phát triển bền vững và chuyên nghiệp hơn. 
+Sự tin tưởng và đồng hành của Quý khách hàng chính là động lực và niềm vinh hạnh đối với Tôn Thép Thành Phát trong suốt quá trình phát triển. 
+Kính chúc Quý khách hàng sức khỏe, thành công và thịnh vượng. 
+Chúc cho mối quan hệ hợp tác giữa Quý khách hàng và Công Ty Tôn Thép Thành Phát ngày càng bền chặt. 
+Trân trọng cảm ơn!`.trim(),
                 companyEmail: "info@tonthanhphat.vn",
                 companyPhone: ["0932695495", "0345658495"],
                 iframeMap: `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.0984083966237!2d106.56168487570342!3d10.80377455868737!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752bd4b454c559%3A0xfcc3c09ec0a8158!2zTmjDoCBtw6F5IHTDtG4gVGjDoG5oIFBow6F0!5e0!3m2!1sen!2s!4v1756277384042!5m2!1sen!2s`,
@@ -76,23 +76,23 @@ async function main() {
     if (!existingCategories) {
         // Create product categories directly (no parent category needed)
         tonKemCategory = await prisma.category.create({
-            data: { name: "Tôn Kẽm", slug: "ton-kem", order: 1, isActive: true },
+            data: { name: "Tôn Kẽm", slug: "ton-kem", isActive: true },
         });
         tonMauCategory = await prisma.category.create({
-            data: { name: "Tôn Màu", slug: "ton-mau", order: 2, isActive: true },
+            data: { name: "Tôn Màu", slug: "ton-mau", isActive: true },
         });
         tonXopCategory = await prisma.category.create({
-            data: { name: "Tôn Xốp PU", slug: "ton-xop-pu", order: 3, isActive: true },
+            data: { name: "Tôn Xốp PU", slug: "ton-xop-pu", isActive: true },
         });
         tongThepCategory = await prisma.category.create({
-            data: { name: "Tôn Lạnh", slug: "ton-lanh", order: 4, isActive: true },
+            data: { name: "Tôn Lạnh", slug: "ton-lanh", isActive: true },
         });
 
         // Create additional product categories
         await prisma.category.createMany({
             data: [
-                { name: "Tôn 5 Sóng", slug: "ton-5-song", order: 5, isActive: true },
-                { name: "Tôn 11 Sóng", slug: "ton-11-song", order: 6, isActive: true },
+                { name: "Tôn 5 Sóng", slug: "ton-5-song", isActive: true },
+                { name: "Tôn 11 Sóng", slug: "ton-11-song", isActive: true },
             ],
         });
 
@@ -106,7 +106,7 @@ async function main() {
         console.log("Categories already exist.");
     }
 
-    // Create Sample Products 
+    // Create Sample Products
     const existingProducts = await prisma.product.findFirst();
     if (!existingProducts) {
         const sampleProducts = [
@@ -134,7 +134,6 @@ async function main() {
                 ],
                 categoryId: tonKemCategory?.id,
                 isFeatured: true,
-                order: 1,
             },
             {
                 name: "Tôn Kẽm Hòa Phát 0.4mm",
@@ -151,7 +150,6 @@ async function main() {
                 ],
                 categoryId: tonKemCategory?.id,
                 isFeatured: true,
-                order: 2,
             },
             // Tôn Màu Products
             {
@@ -169,7 +167,6 @@ async function main() {
                 ],
                 categoryId: tonMauCategory?.id,
                 isFeatured: true,
-                order: 1,
             },
             {
                 name: "Tôn Màu Đỏ Đô 0.5mm",
@@ -185,7 +182,6 @@ async function main() {
                 ],
                 categoryId: tonMauCategory?.id,
                 isFeatured: false,
-                order: 2,
             },
             // Tôn Xốp PU Products
             {
@@ -210,7 +206,6 @@ async function main() {
                 ],
                 categoryId: tonXopCategory?.id,
                 isFeatured: true,
-                order: 1,
             },
             {
                 name: "Tôn Xốp PU Trắng Sữa 75mm",
@@ -227,7 +222,6 @@ async function main() {
                 ],
                 categoryId: tonXopCategory?.id,
                 isFeatured: true,
-                order: 2,
             },
             // Tôn Lạnh Products
             {
@@ -245,7 +239,6 @@ async function main() {
                 ],
                 categoryId: tongThepCategory?.id,
                 isFeatured: false,
-                order: 1,
             },
             {
                 name: "Tôn Lạnh SPCC 0.8mm",
@@ -261,7 +254,6 @@ async function main() {
                 ],
                 categoryId: tongThepCategory?.id,
                 isFeatured: false,
-                order: 2,
             },
         ];
 
@@ -278,7 +270,6 @@ async function main() {
                     specs: product.specs,
                     categoryId: product.categoryId,
                     isFeatured: product.isFeatured,
-                    order: product.order,
                     isActive: true,
                 },
             });

@@ -20,7 +20,7 @@ export default function ProductsPage() {
     
     // Pagination state
     const [currentPage, setCurrentPage] = useState(1);
-    const [pageSize, setPageSize] = useState(10);
+    const [pageSize, setPageSize] = useState(20);
     const [totalPages, setTotalPages] = useState(1);
     const [total, setTotal] = useState(0);
 
@@ -143,19 +143,6 @@ export default function ProductsPage() {
                             </option>
                         ))}
                     </select>
-                    <select
-                        value={pageSize}
-                        onChange={(e) => {
-                            setPageSize(parseInt(e.target.value));
-                            setCurrentPage(1); // Reset to first page on page size change
-                        }}
-                        className="h-10 rounded-xl border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none dark:border-slate-700 dark:bg-slate-900"
-                    >
-                        <option value="10">10 / trang</option>
-                        <option value="20">20 / trang</option>
-                        <option value="50">50 / trang</option>
-                        <option value="100">100 / trang</option>
-                    </select>
                     <Button variant="ghost" onClick={fetchProducts} className="shrink-0">
                         <RefreshCw className="mr-2 h-4 w-4" />
                         Làm mới
@@ -259,59 +246,57 @@ export default function ProductsPage() {
                                 </table>
                             </div>
 
-                            {/* Pagination Controls */}
+                            {/* Pagination */}
                             {totalPages > 1 && (
-                                <div className="flex items-center justify-between border-t border-slate-100 px-6 py-4 dark:border-slate-700">
-                                    <div className="text-sm text-slate-600 dark:text-slate-400">
-                                        Hiển thị {((currentPage - 1) * pageSize) + 1} - {Math.min(currentPage * pageSize, total)} trong tổng {total} sản phẩm
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
+                                <div className="flex justify-center items-center gap-2 border-t border-slate-100 px-6 py-4 dark:border-slate-700">
+                                    {/* Previous Button */}
+                                    {canGoPrevious ? (
+                                        <button
                                             onClick={() => setCurrentPage(p => p - 1)}
-                                            disabled={!canGoPrevious}
-                                            className="rounded-lg"
+                                            className="flex items-center gap-1 px-4 py-2 border border-gray-300 bg-white hover:bg-gray-100 transition-colors text-gray-700 font-medium"
                                         >
-                                            <ChevronLeft className="h-4 w-4" />
+                                            <ChevronLeft size={18} />
                                             Trước
-                                        </Button>
-                                        <div className="flex items-center gap-1">
-                                            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                                                let pageNum;
-                                                if (totalPages <= 5) {
-                                                    pageNum = i + 1;
-                                                } else if (currentPage <= 3) {
-                                                    pageNum = i + 1;
-                                                } else if (currentPage >= totalPages - 2) {
-                                                    pageNum = totalPages - 4 + i;
-                                                } else {
-                                                    pageNum = currentPage - 2 + i;
-                                                }
-                                                return (
-                                                    <Button
-                                                        key={pageNum}
-                                                        variant={currentPage === pageNum ? "default" : "outline"}
-                                                        size="sm"
-                                                        onClick={() => setCurrentPage(pageNum)}
-                                                        className="h-8 w-8 rounded-lg p-0"
-                                                    >
-                                                        {pageNum}
-                                                    </Button>
-                                                );
-                                            })}
+                                        </button>
+                                    ) : (
+                                        <div className="flex items-center gap-1 px-4 py-2 border border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed">
+                                            <ChevronLeft size={18} />
+                                            Trước
                                         </div>
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
+                                    )}
+
+                                    {/* Page Numbers */}
+                                    <div className="flex gap-2">
+                                        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                                            <button
+                                                key={page}
+                                                onClick={() => setCurrentPage(page)}
+                                                className={`px-4 py-2 border font-medium transition-colors ${
+                                                    page === currentPage 
+                                                        ? "bg-gray-900 text-white border-gray-900" 
+                                                        : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+                                                }`}
+                                            >
+                                                {page}
+                                            </button>
+                                        ))}
+                                    </div>
+
+                                    {/* Next Button */}
+                                    {canGoNext ? (
+                                        <button
                                             onClick={() => setCurrentPage(p => p + 1)}
-                                            disabled={!canGoNext}
-                                            className="rounded-lg"
+                                            className="flex items-center gap-1 px-4 py-2 border border-gray-300 bg-white hover:bg-gray-100 transition-colors text-gray-700 font-medium"
                                         >
                                             Sau
-                                            <ChevronRight className="h-4 w-4" />
-                                        </Button>
-                                    </div>
+                                            <ChevronRight size={18} />
+                                        </button>
+                                    ) : (
+                                        <div className="flex items-center gap-1 px-4 py-2 border border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed">
+                                            Sau
+                                            <ChevronRight size={18} />
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </>

@@ -16,7 +16,6 @@ export interface Product {
         name: string;
         slug: string;
     };
-    order: number;
     isActive: boolean;
     isFeatured: boolean;
     createdAt: string;
@@ -33,7 +32,6 @@ export interface CreateProductInput {
     imagePublicIds?: string[]; // Cloudinary public IDs
     specs?: { key: string; value: string }[];
     categoryId?: string;
-    order?: number;
     isActive?: boolean;
     isFeatured?: boolean;
 }
@@ -48,7 +46,6 @@ export interface UpdateProductInput {
     imagePublicIds?: string[]; // Cloudinary public IDs
     specs?: { key: string; value: string }[];
     categoryId?: string | null;
-    order?: number;
     isActive?: boolean;
     isFeatured?: boolean;
 }

@@ -45,7 +45,7 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
                     <>
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                             {products.map((product: any) => (
-                                <Link key={product.id} href={`/san-pham/${product.category?.slug || 'uncategorized'}/${product.slug}`} className="group">
+                                <Link key={product.id} href={`/san-pham/${product.category?.slug || "uncategorized"}/${product.slug}`} className="group">
                                     <div className="bg-white border border-gray-200 hover:shadow-lg transition-shadow">
                                         {/* Product Image */}
                                         <div className="relative aspect-square bg-gray-100 overflow-hidden">
