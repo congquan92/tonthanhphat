@@ -11,15 +11,19 @@ interface Product {
     slug: string;
     thumbnail?: string;
     shortDesc?: string;
+    category?: {
+        slug: string;
+    };
 }
 
 interface ProductCarouselProps {
     title: string;
     products: Product[];
     itemsPerPage?: number;
+    categorySlug?: string; // Optional for backwards compatibility
 }
 
-export default function ProductCarousel({ title, products, itemsPerPage = 4 }: ProductCarouselProps) {
+export default function ProductCarousel({ title, products, itemsPerPage = 4, categorySlug }: ProductCarouselProps) {
     const [currentPage, setCurrentPage] = useState(0);
 
     if (!products || products.length === 0) {
@@ -58,7 +62,7 @@ export default function ProductCarousel({ title, products, itemsPerPage = 4 }: P
             {/* Products Grid */}
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
                 {visibleProducts.map((product) => (
-                    <Link key={product.id} href={`/san-pham/${product.slug}`} className="group border hover:shadow-lg transition">
+                    <Link key={product.id} href={`/san-pham/${categorySlug || product.category?.slug || 'uncategorized'}/${product.slug}`} className="group border hover:shadow-lg transition">
                         <div className="relative aspect-square bg-gray-100">
                             {product.thumbnail ? (
                                 <Image src={product.thumbnail} alt={product.name} fill className="object-contain group-hover:scale-105 transition-transform duration-300" />
