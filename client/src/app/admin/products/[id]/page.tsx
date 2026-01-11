@@ -167,9 +167,7 @@ export default function EditProductPage() {
 
         // Track newly uploaded images (compare with original product)
         const originalPublicIds = product?.imagePublicIds || [];
-        const newlyUploadedPublicIds = formData.imagePublicIds?.filter(
-            (id) => !originalPublicIds.includes(id)
-        ) || [];
+        const newlyUploadedPublicIds = formData.imagePublicIds?.filter((id) => !originalPublicIds.includes(id)) || [];
 
         try {
             setIsSaving(true);
@@ -198,8 +196,6 @@ export default function EditProductPage() {
             setIsSaving(false);
         }
     };
-
-
 
     if (isLoading) {
         return (
@@ -248,12 +244,7 @@ export default function EditProductPage() {
                                 </div>
                                 <div>
                                     <Label htmlFor="description">Mô tả chi tiết</Label>
-                                    <RichTextEditor
-                                        value={formData.description || ""}
-                                        onChange={(value) => setFormData({ ...formData, description: value })}
-                                        placeholder="Nhập mô tả chi tiết sản phẩm..."
-                                        className="mt-1.5"
-                                    />
+                                    <RichTextEditor value={formData.description || ""} onChange={(value) => setFormData({ ...formData, description: value })} placeholder="Nhập mô tả chi tiết sản phẩm..." className="mt-1.5" />
                                 </div>
                             </CardContent>
                         </Card>
@@ -282,7 +273,11 @@ export default function EditProductPage() {
                                             {url === formData.thumbnail && <div className="absolute left-2 top-2 rounded-full bg-blue-500 px-2 py-0.5 text-xs text-white">Ảnh đại diện</div>}
                                         </div>
                                     ))}
-                                    <button type="button" onClick={() => fileInputRef.current?.click()} className="flex aspect-square flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-300 text-slate-400 transition-colors hover:border-blue-500 hover:text-blue-500">
+                                    <button
+                                        type="button"
+                                        onClick={() => fileInputRef.current?.click()}
+                                        className="flex aspect-square flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-300 text-slate-400 transition-colors hover:border-blue-500 hover:text-blue-500"
+                                    >
                                         <Upload className="h-8 w-8" />
                                         <span className="text-sm">Upload ảnh</span>
                                     </button>
@@ -344,12 +339,7 @@ export default function EditProductPage() {
                                         <span className={cn("h-5 w-5 transform rounded-full bg-white shadow-md transition-transform", formData.isFeatured ? "translate-x-5" : "translate-x-0.5")} />
                                     </button>
                                 </div>
-                                <Button 
-                                    type="button" 
-                                    onClick={() => setIsPreviewOpen(true)} 
-                                    variant="outline" 
-                                    className="w-full rounded-xl mb-3"
-                                >
+                                <Button type="button" onClick={() => setIsPreviewOpen(true)} variant="outline" className="w-full rounded-xl mb-3">
                                     <Eye className="mr-2 h-4 w-4" />
                                     Xem trước
                                 </Button>
@@ -365,13 +355,7 @@ export default function EditProductPage() {
                             <CardHeader>
                                 <div className="flex items-center justify-between">
                                     <CardTitle>Danh mục</CardTitle>
-                                    <Button
-                                        type="button"
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={() => setIsCategoryDialogOpen(true)}
-                                        className="text-blue-600 hover:text-blue-700"
-                                    >
+                                    <Button type="button" variant="ghost" size="sm" onClick={() => setIsCategoryDialogOpen(true)} className="text-blue-600 hover:text-blue-700">
                                         <FolderPlus className="mr-1 h-4 w-4" />
                                         Tạo mới
                                     </Button>
@@ -386,7 +370,7 @@ export default function EditProductPage() {
                                     <option value="">Chọn danh mục</option>
                                     {categories
                                         .filter((cat) => cat.isActive)
-                                        .sort((a, b) => a.name.localeCompare(b.name, "vi"))
+                                        .sort((a, b) => a.order - b.order)
                                         .map((cat) => (
                                             <option key={cat.id} value={cat.id}>
                                                 {cat.name}
@@ -400,11 +384,7 @@ export default function EditProductPage() {
             </form>
 
             {/* Quick Category Dialog */}
-            <QuickCategoryDialog
-                isOpen={isCategoryDialogOpen}
-                onClose={() => setIsCategoryDialogOpen(false)}
-                onCategoryCreated={fetchCategories}
-            />
+            <QuickCategoryDialog isOpen={isCategoryDialogOpen} onClose={() => setIsCategoryDialogOpen(false)} onCategoryCreated={fetchCategories} />
 
             {/* Preview Dialog */}
             <ProductPreviewDialog
@@ -417,7 +397,7 @@ export default function EditProductPage() {
                     thumbnail: formData.thumbnail,
                     images: formData.images,
                     specs: formData.specs,
-                    category: categories.find(c => c.id === formData.categoryId),
+                    category: categories.find((c) => c.id === formData.categoryId),
                 }}
             />
         </div>

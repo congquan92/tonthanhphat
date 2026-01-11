@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
+import { CategoryApi, Category } from "@/api/category.api";
 
 const PRODUCTS_PER_PAGE = 20;
 export default function ProductsPage() {
@@ -19,6 +20,7 @@ export default function ProductsPage() {
     const [searchTerm, setSearchTerm] = useState("");
     const [filterCategory, setFilterCategory] = useState("");
     const [deleteProduct, setDeleteProduct] = useState<Product | null>(null);
+    const [categories, setCategories] = useState<Category[]>([]);
 
     // Pagination state
     const [currentPage, setCurrentPage] = useState(1);
@@ -29,12 +31,13 @@ export default function ProductsPage() {
     const fetchProducts = async () => {
         try {
             setIsLoading(true);
-            const response = await ProductApi.getAllProductsAdmin(currentPage, PRODUCTS_PER_PAGE, searchTerm || undefined, filterCategory || undefined);
+            const [response, categoriesRes] = await Promise.all([ProductApi.getAllProductsAdmin(currentPage, PRODUCTS_PER_PAGE, searchTerm || undefined, filterCategory || undefined), CategoryApi.getAllCategoriesAdmin()]);
             setProducts(response.data || []);
             if (response.pagination) {
                 setTotalPages(response.pagination.totalPages);
                 setTotal(response.pagination.total);
             }
+            setCategories(categoriesRes.data || []);
         } catch (error) {
             console.error("Failed to fetch products:", error);
             toast.error("Không thể tải dữ liệu");
@@ -84,9 +87,6 @@ export default function ProductsPage() {
             toast.error("Không thể xóa sản phẩm");
         }
     };
-
-    // Get unique categories from current products
-    const uniqueCategories = Array.from(new Map(products.filter((p) => p.category).map((p) => [p.category!.id, p.category!])).values());
 
     // Pagination controls
     const canGoPrevious = currentPage > 1;
@@ -139,11 +139,14 @@ export default function ProductsPage() {
                                 className="h-10 rounded-xl border border-slate-200 bg-white px-3 text-sm focus:border-blue-500 focus:outline-none dark:border-slate-700 dark:bg-slate-900"
                             >
                                 <option value="">Tất cả danh mục</option>
-                                {uniqueCategories.map((cat) => (
-                                    <option key={cat.id} value={cat.id}>
-                                        {cat.name}
-                                    </option>
-                                ))}
+                                {categories
+                                    .filter((cat) => cat.isActive)
+                                    .sort((a, b) => a.order - b.order)
+                                    .map((cat) => (
+                                        <option key={cat.id} value={cat.slug}>
+                                            {cat.name}
+                                        </option>
+                                    ))}
                             </select>
                             <Button variant="ghost" onClick={fetchProducts} className="shrink-0">
                                 <RefreshCw className="mr-2 h-4 w-4" />
@@ -300,7 +303,7 @@ export default function ProductsPage() {
                     <AlertDialogHeader>
                         <AlertDialogTitle>Xóa vĩnh viễn sản phẩm</AlertDialogTitle>
                         <AlertDialogDescription>
-                            Bạn có chắc chắn muốn <strong className="text-red-600">xóa vĩnh viễn</strong> sản phẩm <strong>"{deleteProduct?.name}"</strong>?
+                            Bạn có chắc chắn muốn <strong className="text-red-600">xóa vĩnh viễn</strong> sản phẩm <strong>{deleteProduct?.name}</strong>?
                             <br />
                             <span className="text-red-500">Hành động này không thể hoàn tác!</span>
                         </AlertDialogDescription>

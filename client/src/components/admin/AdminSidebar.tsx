@@ -20,6 +20,11 @@ const menuItems = [
         icon: Package,
     },
     {
+        title: "Category",
+        href: "/admin/categories",
+        icon: Menu,
+    },
+    {
         title: "Bài viết",
         href: "/admin/posts",
         icon: FileText,

@@ -1,15 +1,12 @@
 import { axiosInstance } from "@/lib/axios";
-import { CreateCategoryInput, UpdateCategoryInput } from "@/api/type";
+import { CreateCategoryInput, UpdateCategoryInput, Category } from "@/api/type";
+
+export type { Category, CreateCategoryInput, UpdateCategoryInput };
 
 export const CategoryApi = {
     // ==================== PUBLIC ====================
-    // Lấy tất cả categories
-    getAllCategories: async () => {
-        const res = await axiosInstance.get(`/categories`);
-        return res.data;
-    },
 
-    // Lấy navLinks format sẵn cho navbar
+    // Lấy category format sẵn cho navbar
     getNavLinks: async () => {
         const res = await axiosInstance.get("/categories/navlinks");
         return res.data;

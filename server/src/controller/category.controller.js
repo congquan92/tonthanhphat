@@ -30,7 +30,7 @@ export const CategoryController = {
     // Tạo category mới
     createCategory: async (req, res) => {
         try {
-            const { name, slug, parentId, order, isActive } = req.body;
+            const { name, slug, order, isActive } = req.body;
 
             if (!name || !slug) {
                 return res.status(400).json({
@@ -42,7 +42,6 @@ export const CategoryController = {
             const category = await CategoryService.createCategory({
                 name,
                 slug,
-                parentId,
                 order,
                 isActive,
             });
@@ -68,7 +67,7 @@ export const CategoryController = {
     updateCategory: async (req, res) => {
         try {
             const { id } = req.params;
-            const { name, slug, description, parentId, order, isActive } = req.body;
+            const { name, slug, description, order, isActive } = req.body;
 
             if (!id) {
                 return res.status(400).json({ success: false, message: "id là bắt buộc" });
@@ -77,7 +76,6 @@ export const CategoryController = {
             const category = await CategoryService.updateCategory(id, {
                 name,
                 slug,
-                parentId,
                 order,
                 isActive,
             });

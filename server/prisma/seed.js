@@ -76,23 +76,23 @@ Trân trọng cảm ơn!`.trim(),
     if (!existingCategories) {
         // Create product categories directly (no parent category needed)
         tonKemCategory = await prisma.category.create({
-            data: { name: "Tôn Kẽm", slug: "ton-kem", isActive: true },
+            data: { name: "Tôn Kẽm", slug: "ton-kem", isActive: true, order: 1 },
         });
         tonMauCategory = await prisma.category.create({
-            data: { name: "Tôn Màu", slug: "ton-mau", isActive: true },
+            data: { name: "Tôn Màu", slug: "ton-mau", isActive: true, order: 2 },
         });
         tonXopCategory = await prisma.category.create({
-            data: { name: "Tôn Xốp PU", slug: "ton-xop-pu", isActive: true },
+            data: { name: "Tôn Xốp PU", slug: "ton-xop-pu", isActive: true, order: 3 },
         });
         tongThepCategory = await prisma.category.create({
-            data: { name: "Tôn Lạnh", slug: "ton-lanh", isActive: true },
+            data: { name: "Tôn Lạnh", slug: "ton-lanh", isActive: true, order: 4 },
         });
 
         // Create additional product categories
         await prisma.category.createMany({
             data: [
-                { name: "Tôn 5 Sóng", slug: "ton-5-song", isActive: true },
-                { name: "Tôn 11 Sóng", slug: "ton-11-song", isActive: true },
+                { name: "Tôn 5 Sóng", slug: "ton-5-song", isActive: true, order: 5 },
+                { name: "Tôn 11 Sóng", slug: "ton-11-song", isActive: true, order: 6 },
             ],
         });
 
