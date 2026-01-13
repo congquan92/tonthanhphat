@@ -49,9 +49,10 @@ interface RichTextEditorProps {
     onChange: (html: string) => void;
     placeholder?: string;
     className?: string;
+    uploadFolder?: string; // Optional folder for image uploads (e.g., "posts" or "products")
 }
 
-export default function RichTextEditor({ value, onChange, placeholder, className }: RichTextEditorProps) {
+export default function RichTextEditor({ value, onChange, placeholder, className, uploadFolder = "posts" }: RichTextEditorProps) {
     const [isUploadingImage, setIsUploadingImage] = useState(false);
     const [showLinkDialog, setShowLinkDialog] = useState(false);
     const [linkUrl, setLinkUrl] = useState("");
@@ -112,7 +113,7 @@ export default function RichTextEditor({ value, onChange, placeholder, className
 
             try {
                 setIsUploadingImage(true);
-                const result = await PostApi.uploadImageFromFile(file, "posts");
+                const result = await PostApi.uploadImageFromFile(file, uploadFolder);
                 if (result.success && editor) {
                     editor.chain().focus().setImage({ src: result.data.url }).run();
                     toast.success("Upload ảnh thành công");
@@ -125,7 +126,7 @@ export default function RichTextEditor({ value, onChange, placeholder, className
             }
         };
         input.click();
-    }, [editor]);
+    }, [editor, uploadFolder]);
 
     // Add link handler
     const handleAddLink = useCallback(() => {
@@ -151,9 +152,7 @@ export default function RichTextEditor({ value, onChange, placeholder, className
             onClick={onClick}
             disabled={disabled}
             title={title}
-            className={`p-2 rounded-lg transition-colors ${
-                isActive ? "bg-blue-100 text-blue-600" : "hover:bg-slate-100 text-slate-600"
-            } ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
+            className={`p-2 rounded-lg transition-colors ${isActive ? "bg-blue-100 text-blue-600" : "hover:bg-slate-100 text-slate-600"} ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
         >
             {children}
         </button>

@@ -14,7 +14,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { QuickCategoryDialog, ProductPreviewDialog } from "../_components";
-import { RichTextEditor } from "@/components/ui/rich-text-editor";
+import RichTextEditor from "@/components/admin/RichTextEditor";
 
 export default function NewProductPage() {
     const router = useRouter();
@@ -224,6 +224,7 @@ export default function NewProductPage() {
                                         onChange={(value) => setFormData({ ...formData, description: value })}
                                         placeholder="Nhập mô tả chi tiết sản phẩm..."
                                         className="mt-1.5"
+                                        uploadFolder="products"
                                     />
                                 </div>
                             </CardContent>

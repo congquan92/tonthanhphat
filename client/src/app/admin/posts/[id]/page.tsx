@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
 import { PostPreviewDialog } from "../_components";
-import { RichTextEditor } from "@/components/admin";
+import RichTextEditor from "@/components/admin/RichTextEditor";
 
 export default function EditPostPage({ params }: { params: Promise<{ id: string }> }) {
     const router = useRouter();
@@ -176,43 +176,19 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
                             <CardContent className="space-y-4">
                                 <div>
                                     <Label htmlFor="title">Tiêu đề *</Label>
-                                    <Input 
-                                        id="title" 
-                                        value={formData.title} 
-                                        onChange={(e) => setFormData({ ...formData, title: e.target.value })} 
-                                        placeholder="Nhập tiêu đề bài viết..." 
-                                        className="mt-1.5" 
-                                    />
+                                    <Input id="title" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} placeholder="Nhập tiêu đề bài viết..." className="mt-1.5" />
                                 </div>
                                 <div>
                                     <Label htmlFor="slug">Slug (URL) *</Label>
-                                    <Input 
-                                        id="slug" 
-                                        value={formData.slug} 
-                                        onChange={(e) => setFormData({ ...formData, slug: e.target.value })} 
-                                        placeholder="slug-bai-viet" 
-                                        className="mt-1.5" 
-                                    />
+                                    <Input id="slug" value={formData.slug} onChange={(e) => setFormData({ ...formData, slug: e.target.value })} placeholder="slug-bai-viet" className="mt-1.5" />
                                 </div>
                                 <div>
                                     <Label htmlFor="excerpt">Tóm tắt</Label>
-                                    <Input 
-                                        id="excerpt" 
-                                        value={formData.excerpt} 
-                                        onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })} 
-                                        placeholder="Tóm tắt ngắn gọn cho listing..." 
-                                        className="mt-1.5" 
-                                    />
+                                    <Input id="excerpt" value={formData.excerpt} onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })} placeholder="Tóm tắt ngắn gọn cho listing..." className="mt-1.5" />
                                 </div>
                                 <div>
                                     <Label htmlFor="author">Tác giả</Label>
-                                    <Input 
-                                        id="author" 
-                                        value={formData.author} 
-                                        onChange={(e) => setFormData({ ...formData, author: e.target.value })} 
-                                        placeholder="Tên tác giả" 
-                                        className="mt-1.5" 
-                                    />
+                                    <Input id="author" value={formData.author} onChange={(e) => setFormData({ ...formData, author: e.target.value })} placeholder="Tên tác giả" className="mt-1.5" />
                                 </div>
                             </CardContent>
                         </Card>
@@ -245,15 +221,9 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
                                     <button
                                         type="button"
                                         onClick={() => setFormData({ ...formData, isPublished: !formData.isPublished })}
-                                        className={cn(
-                                            "flex h-6 w-11 items-center rounded-full transition-colors",
-                                            formData.isPublished ? "bg-emerald-500" : "bg-slate-300"
-                                        )}
+                                        className={cn("flex h-6 w-11 items-center rounded-full transition-colors", formData.isPublished ? "bg-emerald-500" : "bg-slate-300")}
                                     >
-                                        <span className={cn(
-                                            "h-5 w-5 transform rounded-full bg-white shadow-md transition-transform",
-                                            formData.isPublished ? "translate-x-5" : "translate-x-0.5"
-                                        )} />
+                                        <span className={cn("h-5 w-5 transform rounded-full bg-white shadow-md transition-transform", formData.isPublished ? "translate-x-5" : "translate-x-0.5")} />
                                     </button>
                                 </div>
                                 <div className="flex items-center justify-between">
@@ -261,31 +231,16 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
                                     <button
                                         type="button"
                                         onClick={() => setFormData({ ...formData, isFeatured: !formData.isFeatured })}
-                                        className={cn(
-                                            "flex h-6 w-11 items-center rounded-full transition-colors",
-                                            formData.isFeatured ? "bg-amber-500" : "bg-slate-300"
-                                        )}
+                                        className={cn("flex h-6 w-11 items-center rounded-full transition-colors", formData.isFeatured ? "bg-amber-500" : "bg-slate-300")}
                                     >
-                                        <span className={cn(
-                                            "h-5 w-5 transform rounded-full bg-white shadow-md transition-transform",
-                                            formData.isFeatured ? "translate-x-5" : "translate-x-0.5"
-                                        )} />
+                                        <span className={cn("h-5 w-5 transform rounded-full bg-white shadow-md transition-transform", formData.isFeatured ? "translate-x-5" : "translate-x-0.5")} />
                                     </button>
                                 </div>
-                                <Button 
-                                    type="button" 
-                                    onClick={() => setIsPreviewOpen(true)} 
-                                    variant="outline" 
-                                    className="w-full rounded-xl mb-3"
-                                >
+                                <Button type="button" onClick={() => setIsPreviewOpen(true)} variant="outline" className="w-full rounded-xl mb-3">
                                     <Eye className="mr-2 h-4 w-4" />
                                     Xem trước
                                 </Button>
-                                <Button 
-                                    type="submit" 
-                                    disabled={isLoading} 
-                                    className="w-full rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 text-white"
-                                >
+                                <Button type="submit" disabled={isLoading} className="w-full rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 text-white">
                                     {isLoading ? <RefreshCw className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
                                     Cập nhật bài viết
                                 </Button>
@@ -299,38 +254,21 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
                                 <CardDescription>Upload ảnh đại diện cho bài viết.</CardDescription>
                             </CardHeader>
                             <CardContent>
-                                <input 
-                                    ref={fileInputRef} 
-                                    type="file" 
-                                    accept="image/*" 
-                                    onChange={handleImageUpload} 
-                                    className="hidden" 
-                                />
+                                <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
 
                                 {formData.thumbnail ? (
                                     <div className="relative aspect-video overflow-hidden rounded-xl border-2 border-transparent">
-                                        <Image 
-                                            src={formData.thumbnail} 
-                                            alt="Thumbnail" 
-                                            fill 
-                                            className="object-cover" 
-                                        />
+                                        <Image src={formData.thumbnail} alt="Thumbnail" fill className="object-cover" />
                                         <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity hover:opacity-100">
-                                            <Button 
-                                                type="button" 
-                                                variant="ghost" 
-                                                size="icon" 
-                                                onClick={handleRemoveImage} 
-                                                className="h-8 w-8 rounded-full bg-white/20 text-white hover:bg-red-500"
-                                            >
+                                            <Button type="button" variant="ghost" size="icon" onClick={handleRemoveImage} className="h-8 w-8 rounded-full bg-white/20 text-white hover:bg-red-500">
                                                 <X className="h-4 w-4" />
                                             </Button>
                                         </div>
                                     </div>
                                 ) : (
-                                    <button 
-                                        type="button" 
-                                        onClick={() => fileInputRef.current?.click()} 
+                                    <button
+                                        type="button"
+                                        onClick={() => fileInputRef.current?.click()}
                                         className="flex aspect-video w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-300 text-slate-400 transition-colors hover:border-blue-500 hover:text-blue-500"
                                         disabled={isUploading}
                                     >

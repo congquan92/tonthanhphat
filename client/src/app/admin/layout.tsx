@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { AdminSidebar, DesktopOnlyProvider } from "@/components/admin";
+import AdminSidebar from "@/components/admin/AdminSidebar";
+import DesktopOnlyProvider from "@/components/admin/DesktopOnlyProvider";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);

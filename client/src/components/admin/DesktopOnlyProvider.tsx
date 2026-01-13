@@ -3,7 +3,7 @@ import { useIsMobile } from "@/components/admin/hook/useIsMobile";
 import { MonitorSmartphone, Smartphone } from "lucide-react";
 import Image from "next/image";
 
-export function DesktopOnlyProvider({ children }: { children: React.ReactNode }) {
+export default function DesktopOnlyProvider({ children }: { children: React.ReactNode }) {
     const isMobile = useIsMobile();
 
     if (isMobile) {
