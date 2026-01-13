@@ -25,7 +25,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
         contactInfo = contactRes.data;
         sameCategoryProducts = productRes.data.relatedProducts;
     } catch {
-        notFound(); // trang mặc định 404 của Next.js
+        notFound(); // trang 404 của Next.js
     }
 
     if (!productData) {

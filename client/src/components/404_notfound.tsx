@@ -13,10 +13,11 @@ export default function NotFound_404() {
                         key={i}
                         className="absolute w-px h-20 bg-blue-300 opacity-30 animate-rain"
                         style={{
-                            left: `${Math.random() * 100}%`,
-                            top: `${Math.random() * 100}%`,
-                            animationDelay: `${Math.random() * 2}s`,
-                            animationDuration: `${1 + Math.random() * 1.5}s`,
+                            // dùng số thứ tự để tạo vị trí giả lập ngẫu nhiên
+                            left: `${(i * 7) % 100}%`,
+                            top: `${(i * 3) % 100}%`,
+                            animationDelay: `${(i * 0.1) % 2}s`,
+                            animationDuration: `${1 + (i % 2)}s`,
                         }}
                     />
                 ))}
