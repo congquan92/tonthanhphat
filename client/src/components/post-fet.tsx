@@ -1,0 +1,66 @@
+import Image from "next/image";
+import Link from "next/link";
+import { ChevronRight } from "lucide-react";
+import { cn } from "@/lib/utils";
+import type { Post } from "@/api/post.api";
+
+interface PostFetProps {
+    posts?: Post[];
+    slogan: string;
+    className?: string;
+}
+
+export default function PostFet({ posts = [], slogan, className }: PostFetProps) {
+    return (
+        <section className={cn("py-12 bg-white", className)}>
+            <div className="container mx-auto px-4">
+                <div className="mb-8">
+                    <div className="pl-4 mb-4">
+                        <h2 className="text-2xl font-bold text-blue-500 tracking-wide">TIN TỨC</h2>
+                        <p className="text-sm text-gray-600 italic">{slogan}</p>
+                    </div>
+
+                    <div className="flex items-center justify-between mb-6 pl-4">
+                        <h3 className="text-xl md:text-2xl font-bold text-orange-500 uppercase">MỘT SỐ TIN TỨC NỔI BẬT CHO BẠN THAM KHẢO</h3>
+                        <Link href="/tin-tuc" className="flex items-center gap-1 text-blue-500 hover:underline transition-colors text-sm font-medium">
+                            Xem thêm
+                            <ChevronRight className="h-4 w-4" />
+                        </Link>
+                    </div>
+                </div>
+
+                {/* Post Grid */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                    {posts.length === 0 ? (
+                        // Empty state
+                        <div className="col-span-full text-center py-12">
+                            <p className="text-gray-500">Không có tin tức nào</p>
+                        </div>
+                    ) : (
+                        // Post cards
+                        posts.map((post) => (
+                            <Link key={post.id} href={`/tin-tuc/${post.slug}`} className="group border border-gray-200 hover:border-blue-400 transition-all duration-300 hover:shadow-lg bg-white">
+                                {/* Post Image */}
+                                <div className="relative aspect-square w-full overflow-hidden bg-gray-100">
+                                    <Image
+                                        src={post.thumbnail || "/anime.jpg"}
+                                        alt={post.title}
+                                        fill
+                                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                                        sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
+                                    />
+                                </div>
+
+                                {/* Post Info */}
+                                <div className="p-3">
+                                    <h4 className="text-sm font-semibold text-gray-800 mb-1 line-clamp-2 group-hover:text-blue-600 transition-colors">{post.title}</h4>
+                                    <p className="text-xs text-gray-500">{post.excerpt || post.author || "Đọc thêm"}</p>
+                                </div>
+                            </Link>
+                        ))
+                    )}
+                </div>
+            </div>
+        </section>
+    );
+}

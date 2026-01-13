@@ -20,14 +20,14 @@ const menuItems = [
         icon: Package,
     },
     {
-        title: "Category",
-        href: "/admin/categories",
-        icon: BookMarked,
-    },
-    {
         title: "Bài viết",
         href: "/admin/posts",
         icon: FileText,
+    },
+    {
+        title: "Danh mục",
+        href: "/admin/categories",
+        icon: BookMarked,
     },
     {
         title: "Banner",
@@ -41,7 +41,7 @@ const menuItems = [
     },
 ];
 
-export function AdminSidebar({ isCollapsed, onToggle }: AdminSidebarProps) {
+export default function AdminSidebar({ isCollapsed, onToggle }: AdminSidebarProps) {
     const router = useRouter();
 
     const handleLogout = async () => {
