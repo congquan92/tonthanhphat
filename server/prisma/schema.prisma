@@ -86,3 +86,21 @@ model Banner {
 
   @@map("banners")
 }
+
+model Post {
+  id            String    @id @default(uuid())
+  title         String
+  slug          String    @unique
+  excerpt       String?   @db.Text // Tóm tắt ngắn
+  content       String?   @db.Text // Nội dung HTML
+  thumbnail     String? // URL ảnh đại diện
+  imagePublicId String? // Cloudinary public ID
+  author        String? // Tên tác giả
+  isPublished   Boolean   @default(false) // Trạng thái xuất bản
+  isFeatured    Boolean   @default(false) // Bài viết nổi bật
+  publishedAt   DateTime? // Ngày xuất bản
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@map("posts")
+}

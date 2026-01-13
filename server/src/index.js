@@ -9,6 +9,7 @@ import contactInfRoutes from "./routes/contactInf.route.js";
 import categoryRoutes from "./routes/category.route.js";
 import productRoutes from "./routes/product.route.js";
 import bannerRoutes from "./routes/banner.route.js";
+import postRoutes from "./routes/post.route.js";
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use("/api/info", contactInfRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/banners", bannerRoutes);
+app.use("/api/posts", postRoutes);
 
 export default app;
 

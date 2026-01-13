@@ -279,6 +279,229 @@ Trân trọng cảm ơn!`.trim(),
     } else {
         console.log("Products already exist.");
     }
+
+    // Create Sample Posts
+    const existingPosts = await prisma.post.findFirst();
+    if (!existingPosts) {
+        const samplePosts = [
+            {
+                title: "Tôn Thành Phát Khai Trương Chi Nhánh Mới Tại Quận 7",
+                slug: "ton-thanh-phat-khai-truong-chi-nhanh-moi-tai-quan-7",
+                excerpt: "Ngày 15/01/2026, Công ty Tôn Thép Thành Phát chính thức khai trương chi nhánh mới tại Quận 7, TP.HCM nhằm phục vụ tốt hơn nhu cầu của khách hàng khu vực phía Nam.",
+                content: `<h2>Tôn Thành Phát Khai Trương Chi Nhánh Mới</h2>
+<p>Với mục tiêu mở rộng phạm vi hoạt động và nâng cao chất lượng phục vụ khách hàng, Công ty TNHH Sản Xuất Thương Mại Dịch Vụ Tôn Thép Thành Phát tự hào thông báo khai trương chi nhánh mới tại 456 Đường Nguyễn Văn Linh, Quận 7, TP. Hồ Chí Minh.</p>
+<h3>Thông tin chi nhánh mới</h3>
+<ul>
+<li>Địa chỉ: 456 Đường Nguyễn Văn Linh, Quận 7, TP.HCM</li>
+<li>Diện tích: 2000m²</li>
+<li>Kho hàng hiện đại với đầy đủ các loại tôn</li>
+<li>Đội ngũ tư vấn chuyên nghiệp</li>
+</ul>
+<p>Chúng tôi cam kết mang đến cho khách hàng những sản phẩm chất lượng cao với giá cả cạnh tranh nhất thị trường.</p>`,
+                thumbnail: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800",
+                author: "Ban Biên Tập",
+                isPublished: true,
+                isFeatured: true,
+                publishedAt: new Date("2026-01-15"),
+            },
+            {
+                title: "Hướng Dẫn Chọn Tôn Phù Hợp Cho Nhà Xưởng",
+                slug: "huong-dan-chon-ton-phu-hop-cho-nha-xuong",
+                excerpt: "Chọn loại tôn phù hợp cho nhà xưởng là quyết định quan trọng ảnh hưởng đến chi phí và tuổi thổ công trình. Cùng tìm hiểu các tiêu chí quan trọng.",
+                content: `<h2>Hướng Dẫn Chọn Tôn Cho Nhà Xưởng</h2>
+<p>Việc lựa chọn loại tôn phù hợp cho nhà xưởng cần xem xét nhiều yếu tố từ ngân sách, khí hậu đến mục đích sử dụng.</p>
+<h3>Các loại tôn phổ biến</h3>
+<ul>
+<li><strong>Tôn lạnh</strong>: Giá rẻ, phù hợp nhà xưởng tạm thời</li>
+<li><strong>Tôn kẽm</strong>: Chống gỉ tốt, giá trung bình</li>
+<li><strong>Tôn màu</strong>: Đẹp, bền, chống nóng tốt</li>
+<li><strong>Tôn xốp PU</strong>: Cách nhiệt tốt nhất, phù hợp nhà xưởng có máy móc</li>
+</ul>
+<h3>Tiêu chí lựa chọn</h3>
+<p>1. <strong>Độ dày</strong>: Phụ thuộc vào khẩu độ mái và tải trọng<br>
+2. <strong>Độ bền</strong>: Xem xét tuổi thọ và bảo hành<br>
+3. <strong>Khả năng cách nhiệt</strong>: Quan trọng với nhà xưởng có người làm việc<br>
+4. <strong>Giá cả</strong>: Cân đối giữa chất lượng và ngân sách</p>`,
+                thumbnail: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800",
+                author: "Kỹ Sư Nguyễn Văn A",
+                isPublished: true,
+                isFeatured: true,
+                publishedAt: new Date("2026-01-10"),
+            },
+            {
+                title: "Dự Án Cung Cấp Tôn Cho Khu Công Nghiệp Long Thành",
+                slug: "du-an-cung-cap-ton-cho-khu-cong-nghiep-long-thanh",
+                excerpt: "Tôn Thành Phát tự hào là nhà cung cấp tôn chính cho dự án khu công nghiệp Long Thành với tổng diện tích mái lên đến 50,000m².",
+                content: `<h2>Dự Án Khu Công Nghiệp Long Thành</h2>
+<p>Trong tháng 12/2025, Công ty Tôn Thép Thành Phát đã hoàn thành xuất sắc dự án cung cấp và thi công tôn cho Khu Công Nghiệp Long Thành, Đồng Nai.</p>
+<h3>Thông tin dự án</h3>
+<ul>
+<li>Chủ đầu tư: Tập đoàn Công Nghiệp ABC</li>
+<li>Diện tích mái: 50,000m²</li>
+<li>Loại tôn: Tôn xốp PU 75mm + Tôn màu cao cấp</li>
+<li>Thời gian thi công: 2 tháng</li>
+<li>Giá trị hợp đồng: 15 tỷ VNĐ</li>
+</ul>
+<h3>Những thách thức</h3>
+<p>Dự án đòi hỏi tiến độ nhanh và chất lượng cao. Đội ngũ Tôn Thành Phát đã làm việc 3 ca để đảm bảo tiến độ giao hàng và thi công đúng hạn.</p>
+<p>Kết quả là một công trình hoàn thiện vượt mong đợi, nhận được sự hài lòng cao từ chủ đầu tư.</p>`,
+                thumbnail: "https://images.unsplash.com/photo-1581094271901-8022df4466f9?w=800",
+                author: "Phòng Dự Án",
+                isPublished: true,
+                isFeatured: true,
+                publishedAt: new Date("2025-12-28"),
+            },
+            {
+                title: "Tôn Xốp PU - Giải Pháp Cách Nhiệt Hiệu Quả",
+                slug: "ton-xop-pu-giai-phap-cach-nhiet-hieu-qua",
+                excerpt: "Tôn xốp PU là giải pháp cách nhiệt tối ưu cho nhà xưởng, giúp giảm nhiệt độ lên đến 10°C và tiết kiệm chi phí điện năng đáng kể.",
+                content: `<h2>Tôn Xốp PU - Vật Liệu Cách Nhiệt Ưu Việt</h2>
+<p>Trong điều kiện khí hậu nhiệt đới nóng ẩm của Việt Nam, việc cách nhiệt cho nhà xưởng là vô cùng quan trọng.</p>
+<h3>Ưu điểm của Tôn Xốp PU</h3>
+<ul>
+<li><strong>Cách nhiệt xuất sắc</strong>: Hệ số dẫn nhiệt chỉ 0.022 W/mK</li>
+<li><strong>Tiết kiệm năng lượng</strong>: Giảm 40-60% chi phí điều hòa</li>
+<li><strong>Chống ồn</strong>: Giảm tiếng ồn từ mưa, gió</li>
+<li><strong>Chống thấm tuyệt đối</strong>: Lõi xốp kín không thấm nước</li>
+<li><strong>Nhẹ</strong>: Giảm tải cho kết cấu</li>
+<li><strong>Lắp đặt nhanh</strong>: Tiết kiệm thời gian thi công</li>
+</ul>
+<h3>Ứng dụng</h3>
+<p>Tôn xốp PU phù hợp cho: nhà xưởng sản xuất, kho lạnh, siêu thị, trung tâm thương mại, nhà thể thao...</p>`,
+                thumbnail: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800",
+                author: "Kỹ Sư Lê Văn B",
+                isPublished: true,
+                isFeatured: false,
+                publishedAt: new Date("2025-12-20"),
+            },
+            {
+                title: "Quy Trình Sản Xuất Tôn Màu Tại Tôn Thành Phát",
+                slug: "quy-trinh-san-xuat-ton-mau-tai-ton-thanh-phat",
+                excerpt: "Khám phá quy trình sản xuất tôn màu hiện đại với công nghệ tiên tiến, đảm bảo chất lượng sản phẩm đạt tiêu chuẩn quốc tế.",
+                content: `<h2>Quy Trình Sản Xuất Tôn Màu</h2>
+<p>Tôn Thành Phát tự hào sở hữu dây chuyền sản xuất tôn màu hiện đại, áp dụng công nghệ Nhật Bản.</p>
+<h3>Các bước sản xuất</h3>
+<ol>
+<li><strong>Tiền xử lý</strong>: Làm sạch bề mặt tôn kẽm</li>
+<li><strong>Sơn lót</strong>: Phủ lớp sơn chống gỉ</li>
+<li><strong>Sơn phủ</strong>: Phủ lớp sơn màu chính (PVDF hoặc PE)</li>
+<li><strong>Sấy khô</strong>: Nhiệt độ 200-250°C</li>
+<li><strong>Làm nguội</strong>: Hạ nhiệt độ tự nhiên</li>
+<li><strong>Kiểm tra chất lượng</strong>: Đo độ dày lớp sơn, độ bám dính</li>
+<li><strong>Đóng gói</strong>: Bảo vệ bề mặt, chống xước</li>
+</ol>
+<h3>Kiểm soát chất lượng</h3>
+<p>Mỗi cuộn tôn đều được kiểm tra kỹ lưỡng về màu sắc, độ dày lớp sơn, độ bám dính trước khi xuất kho.</p>`,
+                thumbnail: "https://images.unsplash.com/photo-1581094271901-8022df4466f9?w=800",
+                author: "Phòng Kỹ Thuật",
+                isPublished: true,
+                isFeatured: false,
+                publishedAt: new Date("2025-12-15"),
+            },
+            {
+                title: "Bảo Dưỡng Mái Tôn - Bí Quyết Kéo Dài Tuổi Thọ",
+                slug: "bao-duong-mai-ton-bi-quyet-keo-dai-tuoi-tho",
+                excerpt: "Hướng dẫn bảo dưỡng mái tôn định kỳ giúp kéo dài tuổi thọ và duy trì tính năng bảo vệ cho công trình của bạn.",
+                content: `<h2>Bảo Dưỡng Mái Tôn Đúng Cách</h2>
+<p>Mái tôn cần được bảo dưỡng định kỳ để đảm bảo tuổi thọ và hiệu quả sử dụng.</p>
+<h3>Lịch trình bảo dưỡng</h3>
+<ul>
+<li><strong>Hàng tháng</strong>: Kiểm tra bề mặt, vệ sinh lá cây</li>
+<li><strong>6 tháng/lần</strong>: Vệ sinh tổng thể, kiểm tra bu lông</li>
+<li><strong>1 năm/lần</strong>: Kiểm tra chống gỉ, sơn lại nếu cần</li>
+</ul>
+<h3>Các bước vệ sinh</h3>
+<ol>
+<li>Dùng chổi mềm quét sạch bụi bẩn</li>
+<li>Rửa bằng nước sạch (không dùng áp lực cao)</li>
+<li>Dùng dung dịch tẩy nhẹ cho vết bẩn cứng đầu</li>
+<li>Lau khô tự nhiên</li>
+</ol>
+<h3>Lưu ý</h3>
+<p>- Không đi trực tiếp lên mái tôn<br>
+- Không dùng hóa chất mạnh<br>
+- Sơn lại ngay khi phát hiện gỉ sét</p>`,
+                thumbnail: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800",
+                author: "Bộ Phận Kỹ Thuật",
+                isPublished: true,
+                isFeatured: false,
+                publishedAt: new Date("2025-12-10"),
+            },
+            {
+                title: "Tôn Thành Phát Đạt Chứng Nhận ISO 9001:2015",
+                slug: "ton-thanh-phat-dat-chung-nhan-iso-9001-2015",
+                excerpt: "Công ty Tôn Thép Thành Phát vinh dự đạt chứng nhận ISO 9001:2015 về hệ thống quản lý chất lượng, khẳng định cam kết chất lượng với khách hàng.",
+                content: `<h2>Tôn Thành Phát Đạt ISO 9001:2015</h2>
+<p>Ngày 01/12/2025, Công ty TNHH Sản Xuất Thương Mại Dịch Vụ Tôn Thép Thành Phát chính thức nhận chứng nhận ISO 9001:2015 từ tổ chức TUV Rheinland.</p>
+<h3>Ý nghĩa của chứng nhận</h3>
+<p>ISO 9001:2015 là tiêu chuẩn quốc tế về hệ thống quản lý chất lượng, đảm bảo:</p>
+<ul>
+<li>Quy trình sản xuất chuẩn hóa</li>
+<li>Kiểm soát chất lượng chặt chẽ</li>
+<li>Cải tiến liên tục</li>
+<li>Tăng sự hài lòng của khách hàng</li>
+</ul>
+<h3>Con đường phía trước</h3>
+<p>Với chứng nhận này, Tôn Thành Phát cam kết tiếp tục nâng cao chất lượng sản phẩm và dịch vụ, xứng đáng với niềm tin của khách hàng.</p>`,
+                thumbnail: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800",
+                author: "Ban Giám Đốc",
+                isPublished: true,
+                isFeatured: true,
+                publishedAt: new Date("2025-12-01"),
+            },
+            {
+                title: "So Sánh Tôn Kẽm Và Tôn Màu - Nên Chọn Loại Nào?",
+                slug: "so-sanh-ton-kem-va-ton-mau-nen-chon-loai-nao",
+                excerpt: "Phân tích ưu nhược điểm của tôn kẽm và tôn màu giúp bạn đưa ra lựa chọn phù hợp với nhu cầu và ngân sách.",
+                content: `<h2>Tôn Kẽm vs Tôn Màu</h2>
+<p>Cả tôn kẽm và tôn màu đều là lựa chọn phổ biến cho mái nhà, nhưng mỗi loại có ưu nhược điểm riêng.</p>
+<h3>Tôn Kẽm</h3>
+<p><strong>Ưu điểm:</strong></p>
+<ul>
+<li>Giá thành rẻ hơn 20-30%</li>
+<li>Chống gỉ tốt nhờ lớp mạ kẽm</li>
+<li>Phù hợp nhiều loại công trình</li>
+</ul>
+<p><strong>Nhược điểm:</strong></p>
+<ul>
+<li>Bị oxy hóa theo thời gian</li>
+<li>Không có màu sắc đa dạng</li>
+<li>Hấp thụ nhiệt cao hơn</li>
+</ul>
+<h3>Tôn Màu</h3>
+<p><strong>Ưu điểm:</strong></p>
+<ul>
+<li>Màu sắc đa dạng, thẩm mỹ cao</li>
+<li>Lớp sơn chống UV, giảm hấp thụ nhiệt</li>
+<li>Tuổi thọ cao (15-20 năm)</li>
+<li>Ít bảo trì</li>
+</ul>
+<p><strong>Nhược điểm:</strong></p>
+<ul>
+<li>Giá cao hơn tôn kẽm</li>
+<li>Lớp sơn có thể bong tróc nếu không đúng quy cách</li>
+</ul>
+<h3>Kết luận</h3>
+<p>- <strong>Chọn tôn kẽm</strong>: Nếu ngân sách hạn chế, công trình tạm thời<br>
+- <strong>Chọn tôn màu</strong>: Nếu cần thẩm mỹ, bền lâu, ít bảo trì</p>`,
+                thumbnail: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800",
+                author: "Chuyên Gia Tư Vấn",
+                isPublished: true,
+                isFeatured: false,
+                publishedAt: new Date("2025-11-25"),
+            },
+        ];
+
+        for (const post of samplePosts) {
+            await prisma.post.create({
+                data: post,
+            });
+        }
+
+        console.log(`Created ${samplePosts.length} sample posts.`);
+    } else {
+        console.log("Posts already exist.");
+    }
 }
 
 main()
