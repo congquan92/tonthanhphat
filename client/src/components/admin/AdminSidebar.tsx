@@ -20,14 +20,14 @@ const menuItems = [
         icon: Package,
     },
     {
-        title: "Category",
-        href: "/admin/categories",
-        icon: BookMarked,
-    },
-    {
         title: "Bài viết",
         href: "/admin/posts",
         icon: FileText,
+    },
+    {
+        title: "Category",
+        href: "/admin/categories",
+        icon: BookMarked,
     },
     {
         title: "Banner",

@@ -1,15 +1,19 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Upload, X, Save, Loader2 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ArrowLeft, Upload, X, Save, Loader2, Eye, RefreshCw } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { PostApi } from "@/api/post.api";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
+import { PostPreviewDialog } from "../_components";
+import { RichTextEditor } from "@/components/admin";
 
 export default function EditPostPage({ params }: { params: Promise<{ id: string }> }) {
     const router = useRouter();
@@ -17,6 +21,8 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
     const [isLoading, setIsLoading] = useState(false);
     const [isFetching, setIsFetching] = useState(true);
     const [isUploading, setIsUploading] = useState(false);
+    const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const [formData, setFormData] = useState({
         title: "",
@@ -79,6 +85,7 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
 
         try {
             setIsUploading(true);
+            toast.loading("Đang upload ảnh...", { id: "upload" });
             const result = await PostApi.uploadImageFromFile(file, "posts");
             if (result.success) {
                 setFormData((prev) => ({
@@ -86,11 +93,11 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
                     thumbnail: result.data.url,
                     imagePublicId: result.data.publicId,
                 }));
-                toast.success("Upload ảnh thành công");
+                toast.success("Upload ảnh thành công", { id: "upload" });
             }
         } catch (error) {
             console.error("Upload error:", error);
-            toast.error("Upload ảnh thất bại");
+            toast.error("Upload ảnh thất bại", { id: "upload" });
         } finally {
             setIsUploading(false);
         }
@@ -137,128 +144,218 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
     if (isFetching) {
         return (
             <div className="flex items-center justify-center py-12">
-                <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+                <RefreshCw className="h-8 w-8 animate-spin text-blue-500" />
             </div>
         );
     }
 
     return (
         <div className="space-y-6">
-            {/* Header */}
-            <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                    <Link href="/admin/posts">
-                        <Button variant="ghost" size="icon">
-                            <ArrowLeft className="h-5 w-5" />
-                        </Button>
-                    </Link>
-                    <div>
-                        <h1 className="text-2xl font-bold text-slate-900 dark:text-white md:text-3xl">Chỉnh Sửa Bài Viết</h1>
-                        <p className="text-sm text-slate-500">Cập nhật nội dung bài viết</p>
-                    </div>
+            {/* Page Header */}
+            <div className="flex items-center gap-4">
+                <Link href="/admin/posts">
+                    <Button variant="ghost" size="icon" className="rounded-xl">
+                        <ArrowLeft className="h-5 w-5" />
+                    </Button>
+                </Link>
+                <div>
+                    <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Chỉnh sửa bài viết</h1>
+                    <p className="text-sm text-slate-500">Cập nhật nội dung bài viết với editor chuyên nghiệp</p>
                 </div>
             </div>
 
             <form onSubmit={handleSubmit}>
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="grid gap-6 lg:grid-cols-3">
                     {/* Main Content */}
-                    <div className="lg:col-span-2 space-y-6">
-                        <Card className="rounded-2xl border-0 bg-white shadow-lg shadow-slate-200/50">
+                    <div className="space-y-6 lg:col-span-2">
+                        {/* Basic Info */}
+                        <Card className="rounded-2xl border-0 bg-white shadow-lg dark:bg-slate-800">
                             <CardHeader>
-                                <CardTitle>Nội Dung</CardTitle>
+                                <CardTitle>Thông tin cơ bản</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <div>
-                                    <label className="text-sm font-medium text-slate-700 mb-2 block">
-                                        Tiêu đề <span className="text-red-500">*</span>
-                                    </label>
-                                    <Input value={formData.title} onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))} placeholder="Nhập tiêu đề bài viết" required />
+                                    <Label htmlFor="title">Tiêu đề *</Label>
+                                    <Input 
+                                        id="title" 
+                                        value={formData.title} 
+                                        onChange={(e) => setFormData({ ...formData, title: e.target.value })} 
+                                        placeholder="Nhập tiêu đề bài viết..." 
+                                        className="mt-1.5" 
+                                    />
                                 </div>
-
                                 <div>
-                                    <label className="text-sm font-medium text-slate-700 mb-2 block">Slug</label>
-                                    <Input value={formData.slug} onChange={(e) => setFormData((prev) => ({ ...prev, slug: e.target.value }))} placeholder="slug-bai-viet" />
+                                    <Label htmlFor="slug">Slug (URL) *</Label>
+                                    <Input 
+                                        id="slug" 
+                                        value={formData.slug} 
+                                        onChange={(e) => setFormData({ ...formData, slug: e.target.value })} 
+                                        placeholder="slug-bai-viet" 
+                                        className="mt-1.5" 
+                                    />
                                 </div>
-
                                 <div>
-                                    <label className="text-sm font-medium text-slate-700 mb-2 block">Tóm tắt</label>
-                                    <textarea value={formData.excerpt} onChange={(e) => setFormData((prev) => ({ ...prev, excerpt: e.target.value }))} placeholder="Tóm tắt ngắn về bài viết" className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" rows={3} />
+                                    <Label htmlFor="excerpt">Tóm tắt</Label>
+                                    <Input 
+                                        id="excerpt" 
+                                        value={formData.excerpt} 
+                                        onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })} 
+                                        placeholder="Tóm tắt ngắn gọn cho listing..." 
+                                        className="mt-1.5" 
+                                    />
                                 </div>
-
                                 <div>
-                                    <label className="text-sm font-medium text-slate-700 mb-2 block">Nội dung</label>
-                                    <textarea value={formData.content} onChange={(e) => setFormData((prev) => ({ ...prev, content: e.target.value }))} placeholder="Nhập nội dung bài viết (HTML)" className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm resize-none" rows={15} />
-                                    <p className="text-xs text-slate-500 mt-1">Hỗ trợ HTML</p>
+                                    <Label htmlFor="author">Tác giả</Label>
+                                    <Input 
+                                        id="author" 
+                                        value={formData.author} 
+                                        onChange={(e) => setFormData({ ...formData, author: e.target.value })} 
+                                        placeholder="Tên tác giả" 
+                                        className="mt-1.5" 
+                                    />
                                 </div>
+                            </CardContent>
+                        </Card>
 
-                                <div>
-                                    <label className="text-sm font-medium text-slate-700 mb-2 block">Tác giả</label>
-                                    <Input value={formData.author} onChange={(e) => setFormData((prev) => ({ ...prev, author: e.target.value }))} placeholder="Tên tác giả" />
-                                </div>
+                        {/* Rich Text Editor */}
+                        <Card className="rounded-2xl border-0 bg-white shadow-lg dark:bg-slate-800">
+                            <CardHeader>
+                                <CardTitle>Nội dung bài viết</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <RichTextEditor
+                                    value={formData.content}
+                                    onChange={(html) => setFormData({ ...formData, content: html })}
+                                    placeholder="Bắt đầu viết nội dung của bạn... Sử dụng toolbar để định dạng văn bản, thêm ảnh, link và nhiều hơn nữa!"
+                                />
                             </CardContent>
                         </Card>
                     </div>
 
                     {/* Sidebar */}
                     <div className="space-y-6">
-                        {/* Thumbnail */}
-                        <Card className="rounded-2xl border-0 bg-white shadow-lg shadow-slate-200/50">
+                        {/* Publish */}
+                        <Card className="rounded-2xl border-0 bg-white shadow-lg dark:bg-slate-800">
                             <CardHeader>
-                                <CardTitle>Ảnh Đại Diện</CardTitle>
+                                <CardTitle>Xuất bản</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <div className="flex items-center justify-between">
+                                    <Label>Xuất bản</Label>
+                                    <button
+                                        type="button"
+                                        onClick={() => setFormData({ ...formData, isPublished: !formData.isPublished })}
+                                        className={cn(
+                                            "flex h-6 w-11 items-center rounded-full transition-colors",
+                                            formData.isPublished ? "bg-emerald-500" : "bg-slate-300"
+                                        )}
+                                    >
+                                        <span className={cn(
+                                            "h-5 w-5 transform rounded-full bg-white shadow-md transition-transform",
+                                            formData.isPublished ? "translate-x-5" : "translate-x-0.5"
+                                        )} />
+                                    </button>
+                                </div>
+                                <div className="flex items-center justify-between">
+                                    <Label>Bài viết nổi bật</Label>
+                                    <button
+                                        type="button"
+                                        onClick={() => setFormData({ ...formData, isFeatured: !formData.isFeatured })}
+                                        className={cn(
+                                            "flex h-6 w-11 items-center rounded-full transition-colors",
+                                            formData.isFeatured ? "bg-amber-500" : "bg-slate-300"
+                                        )}
+                                    >
+                                        <span className={cn(
+                                            "h-5 w-5 transform rounded-full bg-white shadow-md transition-transform",
+                                            formData.isFeatured ? "translate-x-5" : "translate-x-0.5"
+                                        )} />
+                                    </button>
+                                </div>
+                                <Button 
+                                    type="button" 
+                                    onClick={() => setIsPreviewOpen(true)} 
+                                    variant="outline" 
+                                    className="w-full rounded-xl mb-3"
+                                >
+                                    <Eye className="mr-2 h-4 w-4" />
+                                    Xem trước
+                                </Button>
+                                <Button 
+                                    type="submit" 
+                                    disabled={isLoading} 
+                                    className="w-full rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 text-white"
+                                >
+                                    {isLoading ? <RefreshCw className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+                                    Cập nhật bài viết
+                                </Button>
+                            </CardContent>
+                        </Card>
+
+                        {/* Thumbnail */}
+                        <Card className="rounded-2xl border-0 bg-white shadow-lg dark:bg-slate-800">
+                            <CardHeader>
+                                <CardTitle>Ảnh đại diện</CardTitle>
+                                <CardDescription>Upload ảnh đại diện cho bài viết.</CardDescription>
                             </CardHeader>
                             <CardContent>
+                                <input 
+                                    ref={fileInputRef} 
+                                    type="file" 
+                                    accept="image/*" 
+                                    onChange={handleImageUpload} 
+                                    className="hidden" 
+                                />
+
                                 {formData.thumbnail ? (
-                                    <div className="relative aspect-video bg-slate-100 rounded-lg overflow-hidden">
-                                        <Image src={formData.thumbnail} alt="Thumbnail" fill className="object-cover" />
-                                        <button type="button" onClick={handleRemoveImage} className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full hover:bg-red-600">
-                                            <X className="h-4 w-4" />
-                                        </button>
+                                    <div className="relative aspect-video overflow-hidden rounded-xl border-2 border-transparent">
+                                        <Image 
+                                            src={formData.thumbnail} 
+                                            alt="Thumbnail" 
+                                            fill 
+                                            className="object-cover" 
+                                        />
+                                        <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity hover:opacity-100">
+                                            <Button 
+                                                type="button" 
+                                                variant="ghost" 
+                                                size="icon" 
+                                                onClick={handleRemoveImage} 
+                                                className="h-8 w-8 rounded-full bg-white/20 text-white hover:bg-red-500"
+                                            >
+                                                <X className="h-4 w-4" />
+                                            </Button>
+                                        </div>
                                     </div>
                                 ) : (
-                                    <label className="flex flex-col items-center justify-center aspect-video border-2 border-dashed border-slate-300 rounded-lg cursor-pointer hover:border-blue-500 transition-colors">
-                                        <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" disabled={isUploading} />
-                                        <Upload className="h-8 w-8 text-slate-400 mb-2" />
-                                        <span className="text-sm text-slate-500">{isUploading ? "Đang upload..." : "Click để upload ảnh"}</span>
-                                    </label>
+                                    <button 
+                                        type="button" 
+                                        onClick={() => fileInputRef.current?.click()} 
+                                        className="flex aspect-video w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-slate-300 text-slate-400 transition-colors hover:border-blue-500 hover:text-blue-500"
+                                        disabled={isUploading}
+                                    >
+                                        <Upload className="h-8 w-8" />
+                                        <span className="text-sm">{isUploading ? "Đang upload..." : "Upload ảnh"}</span>
+                                    </button>
                                 )}
-                            </CardContent>
-                        </Card>
-
-                        {/* Settings */}
-                        <Card className="rounded-2xl border-0 bg-white shadow-lg shadow-slate-200/50">
-                            <CardHeader>
-                                <CardTitle>Cài Đặt</CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-3">
-                                <label className="flex items-center gap-2 cursor-pointer">
-                                    <input type="checkbox" checked={formData.isPublished} onChange={(e) => setFormData((prev) => ({ ...prev, isPublished: e.target.checked }))} className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500" />
-                                    <span className="text-sm font-medium text-slate-700">Xuất bản</span>
-                                </label>
-
-                                <label className="flex items-center gap-2 cursor-pointer">
-                                    <input type="checkbox" checked={formData.isFeatured} onChange={(e) => setFormData((prev) => ({ ...prev, isFeatured: e.target.checked }))} className="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500" />
-                                    <span className="text-sm font-medium text-slate-700">Đánh dấu nổi bật</span>
-                                </label>
-                            </CardContent>
-                        </Card>
-
-                        {/* Actions */}
-                        <Card className="rounded-2xl border-0 bg-white shadow-lg shadow-slate-200/50">
-                            <CardContent className="p-4 space-y-2">
-                                <Button type="submit" className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white" disabled={isLoading}>
-                                    <Save className="mr-2 h-4 w-4" />
-                                    {isLoading ? "Đang cập nhật..." : "Cập Nhật Bài Viết"}
-                                </Button>
-                                <Link href="/admin/posts" className="block">
-                                    <Button type="button" variant="outline" className="w-full">
-                                        Hủy
-                                    </Button>
-                                </Link>
                             </CardContent>
                         </Card>
                     </div>
                 </div>
             </form>
+
+            {/* Preview Dialog */}
+            <PostPreviewDialog
+                isOpen={isPreviewOpen}
+                onClose={() => setIsPreviewOpen(false)}
+                postData={{
+                    title: formData.title || "Tiêu đề bài viết",
+                    excerpt: formData.excerpt,
+                    content: formData.content,
+                    thumbnail: formData.thumbnail,
+                    author: formData.author,
+                }}
+            />
         </div>
     );
 }
