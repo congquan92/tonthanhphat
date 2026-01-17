@@ -18,6 +18,7 @@ export default async function Navbar() {
         },
         { href: "/gioi-thieu", label: "Giới Thiệu" },
         { href: "/tin-tuc", label: "Tin Tức" },
+        { href: "/bang-gia", label: "Bảng Giá" },
         { href: "/lien-he", label: "Liên Hệ" },
     ];
 
