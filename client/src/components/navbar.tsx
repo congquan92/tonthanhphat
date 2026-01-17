@@ -1,4 +1,4 @@
-import { Phone, Mail } from "lucide-react";
+import { Phone, Mail, MapPin } from "lucide-react";
 import { ContactInfoApi } from "@/api/contacinfo.api";
 import { CategoryApi } from "@/api/category.api";
 import { ContactInfo } from "@/components/type";
@@ -38,7 +38,18 @@ export default async function Navbar() {
                             <span>{contactInfo.companyEmail}</span>
                         </a>
                     </div>
-                    <div className="hidden md:block font-medium">{contactInfo.companySlogan}</div>
+                    <div className="flex items-center gap-3">
+                        <div className="font-medium hidden md:block">
+                            <a
+                                href="https://www.google.com/maps/place/Nh%C3%A0+m%C3%A1y+t%C3%B4n+Th%C3%A0nh+Ph%C3%A1t/@10.803769,106.56426,16z/data=!4m6!3m5!1s0x31752bd4b454c559:0xfcc3c09ec0a8158!8m2!3d10.8037693!4d106.5642598!16s%2Fg%2F11ft4vp5cq?hl=en&entry=ttu&g_ep=EgoyMDI2MDExMy4wIKXMDSoASAFQAw%3D%3D"
+                                className="flex items-center gap-2 "
+                            >
+                                <MapPin className="h-4 w-4" />
+                                <span className="hover:underline">{contactInfo.addresses[0].address}</span>
+                            </a>
+                        </div>
+                        <div className="hidden md:block font-medium">{contactInfo.companySlogan}</div>
+                    </div>
                 </div>
             </div>
 
