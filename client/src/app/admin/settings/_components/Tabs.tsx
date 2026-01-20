@@ -15,7 +15,10 @@ export function Tabs({ tabs, activeTab, onTabChange }: TabProps) {
                 <button
                     key={tab.id}
                     onClick={() => onTabChange(tab.id)}
-                    className={cn("flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all", activeTab === tab.id ? "bg-white text-slate-900 shadow-sm dark:bg-slate-700 dark:text-white" : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300")}
+                    className={cn(
+                        "flex items-center gap-2 cursor-pointer rounded-lg px-4 py-2 text-sm font-medium transition-all",
+                        activeTab === tab.id ? "bg-white text-slate-900 shadow-sm dark:bg-slate-700 dark:text-white" : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300",
+                    )}
                 >
                     <tab.icon className="h-4 w-4" />
                     {tab.label}

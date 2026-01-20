@@ -10,6 +10,7 @@
         "clean": "rimraf .next"
     },
     "dependencies": {
+        "@hookform/resolvers": "^5.2.2",
         "@radix-ui/react-alert-dialog": "^1.1.15",
         "@radix-ui/react-avatar": "^1.1.11",
         "@radix-ui/react-dropdown-menu": "^2.1.16",
@@ -36,9 +37,11 @@
         "next-themes": "^0.4.6",
         "react": "19.2.1",
         "react-dom": "19.2.1",
+        "react-hook-form": "^7.71.1",
         "sonner": "^2.0.7",
         "tailwind-merge": "^3.4.0",
-        "yet-another-react-lightbox": "^3.28.0"
+        "yet-another-react-lightbox": "^3.28.0",
+        "zod": "^4.3.5"
     },
     "devDependencies": {
         "@tailwindcss/postcss": "^4",
