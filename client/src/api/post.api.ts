@@ -57,8 +57,12 @@ export const PostApi = {
     },
 
     getPostBySlug: async (slug: string) => {
-        const res = await axiosInstance.get(`/posts/${slug}`);
-        return res.data;
+        try {
+            const res = await axiosInstance.get(`/posts/${slug}`);
+            return res.data;
+        } catch {
+            return { success: false, data: null };
+        }
     },
 
     // ==================== ADMIN ====================

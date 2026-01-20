@@ -29,7 +29,7 @@ export default function NotFound_404() {
                 <p className="mt-4 text-lg font-medium">Trang không tồn tại</p>
                 <p className="mt-2 text-muted-foreground">Kiểm tra xem bạn đã nhập đúng địa chỉ chưa, quay lại trang trước đó hoặc thử sử dụng tìm kiếm của chúng tôi để tìm một cái gì đó cụ thể.</p>
                 <Link href="/">
-                    <Button className="mt-6">
+                    <Button className="mt-6 cursor-pointer">
                         <Home className="inline-flex mr-2" /> Về trang chủ
                     </Button>
                 </Link>
