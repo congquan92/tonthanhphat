@@ -1,5 +1,5 @@
 "use client";
-import { useIsMobile } from "@/components/admin/hook/useIsMobile";
+import { useIsMobile } from "@/hook/useIsMobile";
 import { MonitorSmartphone, Smartphone } from "lucide-react";
 import Image from "next/image";
 

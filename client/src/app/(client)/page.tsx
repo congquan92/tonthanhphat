@@ -9,9 +9,12 @@ import PostFet from "@/components/post-fet";
 import { PostApi } from "@/api/post.api";
 import Collaborate from "@/components/collaborate";
 import ServiceFet from "@/components/service-fet";
+import BackToTop from "@/components/backtotop";
+import PhoneContact from "@/components/phonecontact";
 
 export default async function Home() {
     const [contactRes, productRes, bannerRes, postRes] = await Promise.all([ContactInfoApi.getContactInfo(), ProductApi.getFeaturedProducts(10), BannerApi.getAllBanners(), PostApi.getFeaturedPosts(10)]);
+
     const contactInfo: ContactInfo = contactRes.data;
     const products = productRes.data || [];
     const banners = bannerRes.data || [];
@@ -25,6 +28,9 @@ export default async function Home() {
             <PostFet posts={posts} slogan={contactInfo.companySlogan} />
             <ServiceFet slogan={contactInfo.companySlogan} />
             <Collaborate />
+
+            <PhoneContact contactInfo={contactInfo} />
+            <BackToTop />
         </div>
     );
 }
