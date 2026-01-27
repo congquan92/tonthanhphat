@@ -5,8 +5,7 @@ dotenv.config();
 
 const prisma = new PrismaClient();
 
-async function main() {
-    // Create Admin User
+async function createAdminUser() {
     const email = "admin123@gmail.com";
     const password = "admin123";
     const existingAdmin = await prisma.adminUser.findUnique({
@@ -24,8 +23,9 @@ async function main() {
     } else {
         console.log("Admin user already exists.");
     }
+}
 
-    // Create Contact Info
+async function createContactInfo() {
     const existingContactInfo = await prisma.contactInfo.findFirst();
     if (!existingContactInfo) {
         await prisma.contactInfo.create({
@@ -68,7 +68,9 @@ Trân trọng cảm ơn!`.trim(),
     } else {
         console.log("Contact info already exists.");
     }
+}
 
+async function createCategories() {
     // Create Product Categories (flat structure, no parent/child)
     let tonKemCategory, tonMauCategory, tonXopCategory, tongThepCategory;
     const existingCategories = await prisma.category.findFirst();
@@ -105,6 +107,12 @@ Trân trọng cảm ơn!`.trim(),
         tongThepCategory = await prisma.category.findUnique({ where: { slug: "ton-lanh" } });
         console.log("Categories already exist.");
     }
+
+    return { tonKemCategory, tonMauCategory, tonXopCategory, tongThepCategory };
+}
+
+async function createProducts(categories) {
+    const { tonKemCategory, tonMauCategory, tonXopCategory, tongThepCategory } = categories;
 
     // Create Sample Products
     const existingProducts = await prisma.product.findFirst();
@@ -279,7 +287,9 @@ Trân trọng cảm ơn!`.trim(),
     } else {
         console.log("Products already exist.");
     }
+}
 
+async function createPosts() {
     // Create Sample Posts
     const existingPosts = await prisma.post.findFirst();
     if (!existingPosts) {
@@ -502,6 +512,20 @@ Trân trọng cảm ơn!`.trim(),
     } else {
         console.log("Posts already exist.");
     }
+}
+
+async function main() {
+    // Create Admin User
+    await createAdminUser();
+
+    // Create Contact Info
+    await createContactInfo();
+
+    const categories = await createCategories(); // Create Categories
+    await createProducts(categories); // Create Products
+    // Create Posts
+
+    await createPosts();
 }
 
 main()
